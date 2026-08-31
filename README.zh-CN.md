@@ -1,12 +1,17 @@
 # OpenMicroDuck
 
-[English](README.md) | **简体中文**
+<p align="center">
+  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-1f6feb?style=for-the-badge" alt="English documentation"></a>
+  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/语言-简体中文文档-d73a49?style=for-the-badge" alt="简体中文文档"></a>
+</p>
 
 **独立、非官方的 Microduck 研究、逆向分析、仿真与技术资料整理项目。**
 
-> OpenMicroDuck 与 Pollen Robotics、Hugging Face 不存在隶属、授权、赞助或官方合作关系。Microduck 及其相关名称、Logo、商标和品牌资产归各自权利人所有。
+OpenMicroDuck 将已经公开的 **Microduck** 技术信息整理成可追溯来源的工程参考资料，重点覆盖公开硬件信息、BOM、电子元器件、机械结构、电控、软件架构、仿真、强化学习、互操作研究以及社区可复现的逆向分析成果。
 
-OpenMicroDuck 将已经公开的 **Microduck** 技术信息整理成可追溯来源的工程参考资料，重点覆盖公开硬件信息、机械结构、软件架构、仿真、强化学习、互操作研究以及社区可复现的逆向分析成果。
+**English summary:** OpenMicroDuck is an independent, unofficial Microduck reverse-engineering and technical documentation project covering publicly verifiable hardware, BOM research, electronics, mechanics, simulation, reinforcement learning, and community projects.
+
+> OpenMicroDuck 与 Pollen Robotics、Hugging Face 不存在隶属、授权、赞助或官方合作关系。Microduck 及其相关名称、Logo、商标和品牌资产归各自权利人所有。
 
 本项目**不声称 Microduck 是开源硬件**。Pollen Robotics 已明确说明，“开源”针对软件栈；机械与电子设计文件并未作为开源硬件发布。
 
@@ -105,4 +110,4 @@ open-microduck/
 
 ---
 
-**搜索关键词：** Microduck、Microduck 逆向、Microduck 硬件、Microduck BOM、Microduck 拆解、Microduck CAD、Microduck 仿真、Microduck 强化学习、Microduck RL、Dynamixel XL330、LSM6DSV16X、Radxa Zero 3W、Microduck robot model、Microduck sim-to-real。
+**搜索关键词：** Microduck、Microduck 逆向、Microduck 逆向分析、Microduck 硬件、Microduck BOM、Microduck 电子元器件、Microduck 拆解、Microduck CAD、Microduck 仿真、Microduck 强化学习、Microduck RL、Dynamixel XL330、LSM6DSV16X、Radxa Zero 3W、Microduck robot model、Microduck sim-to-real.
