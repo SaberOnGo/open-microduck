@@ -1,17 +1,14 @@
-# Hardware Research
+# Hardware Research Outputs
 
-This directory contains independently produced hardware research for OpenMicroDuck.
+This directory is reserved for **OpenMicroDuck-owned, public research outputs** such as independently created diagrams, measurement data, scripts, and reproducible analyses.
 
-Planned topics include:
+For the maintained public-source documentation about Microduck itself, start here:
 
-- mechanical structure and kinematics;
-- actuator and servo characterization;
-- communication buses and timing;
-- main compute and auxiliary MCU architecture;
-- IMU, camera, ranging, and other sensors;
-- power distribution, battery behavior, and voltage variation;
-- test fixtures, measurement methods, and prototype electronics.
+- [Public hardware inventory / BOM status](../docs/en/hardware/public-bom.md)
+- [Mechanical structure](../docs/en/hardware/mechanical-structure.md)
+- [Electronics and buses](../docs/en/hardware/electronics-and-buses.md)
+- [中文硬件文档](../docs/zh-CN/README.md)
 
-Do not place proprietary Microduck CAD, PCB, schematic, firmware, or other non-public third-party design files here. Prefer measurements, independently created diagrams, derived specifications, and independently engineered designs.
+Do not place confidential, leaked, private, unrelated proprietary, or unlawfully obtained material in this directory. Do not upload unpublished third-party Microduck CAD, PCB, schematics, firmware, or manufacturing files.
 
-See [`../docs/RESEARCH_GUIDELINES.md`](../docs/RESEARCH_GUIDELINES.md) before adding reverse-engineering results.
+Public upstream and community-derived information should retain source/provenance labels. See [research guidelines](../docs/en/research-guidelines.md).
