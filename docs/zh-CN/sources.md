@@ -13,6 +13,19 @@ OpenMicroDuck 是一个以来源可追溯为基本原则的公开研究项目。
 5. **社区重建**：适合派生几何、转换资产、替代实现和待验证假设，但必须保留标签。
 6. **媒体 / 二手报道**：用于背景，不覆盖更权威的官方技术来源。
 
+## 当前上游版本快照
+
+本轮版本敏感文档对应到以下公开上游 revision：
+
+| 来源 | 本次核对版本 |
+|---|---|
+| `pollen-robotics/microduck` `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` |
+| `pollen-robotics/microduck_rl` `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` |
+| `Rhoban/bam` `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` |
+| Pollen Robotics 产品页 / Press Kit | 2026-08-31 核对 |
+
+为什么要记录这些版本、以后怎样更新，见[上游版本基线](upstream/version-matrix.md)。
+
 ## 官方产品资料
 
 ### 产品页
@@ -29,6 +42,8 @@ https://pollen-robotics.com/microduck/press-kit/
 
 Press Kit 还明确列出仍处于 provisional 状态的规格，因此具体 camera/FOV、LiDAR range、radio version 等不应被第三方开发资料提前固定成量产规格。
 
+面向普通读者的产品级整理见 [Microduck 官方规格基线](product/official-specifications.md)。
+
 ## 官方机载软件
 
 https://github.com/pollen-robotics/microduck
@@ -41,12 +56,19 @@ https://github.com/pollen-robotics/microduck
 | `duck-control/src/model.rs` | 15 joint ID、mouth index、IMU ID、baud、battery mapping 等 |
 | `duck-control/src/imu.rs` | LSM6DSV16X / `imu_to_dxl` v2 数据格式 |
 | `deploy/robotd.toml` | 当前串口、50 Hz、策略 contract、runtime/safety 配置 |
-| `docs/design/` | 架构与设计理由 |
+| `docs/design/robotd-design.md` | 控制循环、硬件和 Runtime 设计依据 |
+| `docs/design/architecture.md` | service boundary 和系统架构 |
+| `docs/design/app-path-design.md` | 本地 / Bluetooth / API routing 架构 |
 | `docs/project/media-bringup.md` | Radxa/RK3566 当前媒体硬件实测与 bring-up |
 | `tof/` | 多区 ToF 支持 |
 | `deploy/audio/` | 当前音频 codec / device-tree bring-up |
 
 需要精确复现时应记录 commit SHA，因为官方仓库仍在快速演进。
+
+OpenMicroDuck 的易读整理：
+
+- [机载运行时架构](software/runtime-architecture.md)
+- [控制循环与传感器数据流](software/control-loop-and-sensor-dataflow.md)
 
 ## 官方 RL / 仿真
 
@@ -58,6 +80,7 @@ https://github.com/pollen-robotics/microduck_rl
 |---|---|
 | `README.md` | 训练栈、任务、61-D/14-action、BAM/backlash |
 | `src/mjlab_microduck/robot/microduck/` | MJCF、mesh、碰撞、惯量和关节树 |
+| `src/mjlab_microduck/robot/microduck_constants.py` | robot/model/actuator 配置常量 |
 | `src/mjlab_microduck/actuator/` | BAM、摩擦与随机化 |
 | `src/mjlab_microduck/tasks/` | observation、reward、event、domain randomization |
 | `scripts/export.py` | 正式 ONNX 导出 |
@@ -65,11 +88,24 @@ https://github.com/pollen-robotics/microduck_rl
 
 官方 README 当前声明软件为 Apache-2.0，3D model files 为 Creative Commons BY-SA-NC。再分发前仍应检查实际文件与最新 license 状态。
 
+OpenMicroDuck 的整理和教程：
+
+- [仿真与强化学习](simulation/model-and-rl.md)
+- [技能、Policy 与运行时切换](simulation/policy-catalog-and-switching.md)
+- [可复现训练与 ONNX 导出](simulation/reproducible-training-and-export.md)
+- [仿真模型资产参考](simulation/model-assets-reference.md)
+
 ## 执行器模型
 
 https://github.com/Rhoban/bam
 
 官方 Microduck RL 用于提高 Dynamixel 执行器仿真 fidelity。
+
+## 器件原厂 / 官方平台资料
+
+对于已经有公开 Microduck 证据支持的 RK3566 / Radxa Zero 3W、Dynamixel XL330、LSM6DSV16X、BMI088、TLV320AIC3104、IMX219 / Raspberry Pi camera path、VL53L5CX / VL53L8CX 等器件，见[公开器件 Datasheet 与官方资料索引](hardware/component-datasheets.md)。
+
+需要注意：原厂 Datasheet 说明器件“能做什么”；要证明 Microduck 实际怎样配置这个器件，仍然应该回到 Microduck 官方源码。
 
 ## 已检查的社区来源
 
@@ -104,4 +140,10 @@ https://github.com/Rhoban/bam
 4. 无法消除时把冲突保留下来；
 5. 绝不把第三方推导静默写成“官方规格”。
 
-本仓库已记录的例子包括：正式 NP-F550 电池规格与 F970 命名的仿真几何，以及尚未冻结的摄像头/ToF 产品规格与当前开发驱动之间的区别。
+本仓库已记录的例子包括：正式 NP-F550 电池规格与 F970 命名的仿真几何、Press Kit 与商店页面重量精度差异，以及尚未冻结的 camera/ToF 产品规格与当前开发驱动之间的区别。
+
+持续维护的未确认清单见[待确认问题与来源冲突](research/open-questions-and-conflicts.md)。
+
+## 可复现性说明
+
+URL 适合找到可读来源；但凡结论依赖具体代码、模型或参数，最好同时记录 Git commit SHA。Microduck 目前仍处在快速开发期，`main` / `develop` 后续都会继续变化。

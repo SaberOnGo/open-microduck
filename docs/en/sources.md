@@ -15,6 +15,19 @@ For claims about Microduck itself, use this order whenever possible:
 5. **Community reconstruction** — useful for derived geometry, transformed assets, alternative implementations, and hypotheses; must remain labeled.
 6. **Media/secondary reporting** — useful for context, but should not override an official technical source.
 
+## Current upstream snapshot
+
+Version-sensitive OpenMicroDuck pages in this source sweep are anchored to:
+
+| Source | Revision checked |
+|---|---|
+| `pollen-robotics/microduck` `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` |
+| `pollen-robotics/microduck_rl` `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` |
+| `Rhoban/bam` `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` |
+| Pollen Robotics product/press pages | checked 2026-08-31 |
+
+See [Upstream version matrix](upstream/version-matrix.md) for the purpose and update rules for this snapshot.
+
 ## Official product sources
 
 ### Product page
@@ -46,6 +59,8 @@ Preferred source for current product-level specifications, including:
 - explicit statement that “open source” refers to software, not mechanical/electronic design files;
 - explicit list of specifications that are still provisional.
 
+A reader-friendly product baseline is maintained in [Official Microduck specifications](product/official-specifications.md).
+
 ## Official onboard software
 
 Repository:
@@ -69,6 +84,11 @@ Key paths:
 
 Because this repository is active development, file-level claims should ideally record the relevant commit when exact reproducibility matters.
 
+OpenMicroDuck summaries:
+
+- [Onboard runtime architecture](software/runtime-architecture.md)
+- [Control loop and sensor dataflow](software/control-loop-and-sensor-dataflow.md)
+
 ## Official RL / simulation stack
 
 Repository:
@@ -89,11 +109,24 @@ Key areas:
 
 Upstream README states the software license is Apache-2.0 and the 3D model files are under Creative Commons BY-SA-NC. Always inspect the exact upstream file/license state before redistribution.
 
+OpenMicroDuck summaries/guides:
+
+- [Simulation and reinforcement learning](simulation/model-and-rl.md)
+- [Policy catalog and runtime switching](simulation/policy-catalog-and-switching.md)
+- [Reproducible training and ONNX export](simulation/reproducible-training-and-export.md)
+- [Simulation model assets reference](simulation/model-assets-reference.md)
+
 ## Actuator model
 
 https://github.com/Rhoban/bam
 
 Used by the official Microduck RL stack for higher-fidelity Dynamixel actuator behavior.
+
+## Manufacturer / platform documentation
+
+For official documentation of publicly evidenced components such as RK3566/Radxa Zero 3W, Dynamixel XL330, LSM6DSV16X, BMI088, TLV320AIC3104, the IMX219/Raspberry Pi camera path, and VL53L5CX/VL53L8CX, see [Public component datasheet and documentation index](hardware/component-datasheets.md).
+
+A manufacturer datasheet describes component capability; Microduck source is still required to establish how that component is configured in the robot.
 
 ## Reviewed community sources
 
@@ -130,7 +163,9 @@ When two sources disagree:
 4. preserve the disagreement in documentation if it cannot be resolved;
 5. never silently promote a community-derived value to “official”.
 
-Examples already documented in this repository include product NP-F550 battery specification versus F970-named simulation geometry, and provisional camera/ToF details versus concrete current development drivers.
+Examples already documented in this repository include product NP-F550 battery specification versus F970-named simulation geometry, press-kit versus store weight precision, and provisional camera/ToF details versus concrete current development drivers.
+
+See [Open questions and source conflicts](research/open-questions-and-conflicts.md) for the maintained unresolved list.
 
 ## Reproducibility note
 
