@@ -1,8 +1,9 @@
 # OpenMicroDuck
 
+<p align="center"><strong>🌐 Language / 语言</strong></p>
 <p align="center">
-  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-1f6feb?style=for-the-badge" alt="English documentation"></a>
-  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/语言-简体中文文档-d73a49?style=for-the-badge" alt="简体中文文档"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/ENGLISH-1f6feb?style=for-the-badge" alt="English" height="44"></a>&nbsp;&nbsp;
+  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-d73a49?style=for-the-badge" alt="简体中文" height="44"></a>
 </p>
 
 **独立、非官方的 Microduck 研究、逆向分析、仿真与技术资料整理项目。**
