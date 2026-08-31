@@ -13,6 +13,7 @@ The repository does **not** claim that Microduck is open-source hardware. Pollen
 ## What is documented here
 
 - public and source-code-derived hardware inventory;
+- community-derived BOM, fastener, bearing, and assembly reconstruction kept separate from official specifications;
 - motors, joint layout, sensors, compute, battery, buses, and control-loop information;
 - mechanical and kinematic structure derived from publicly released simulation assets;
 - official runtime and reinforcement-learning architecture;
@@ -25,6 +26,7 @@ The repository does **not** claim that Microduck is open-source hardware. Pollen
 |---|---|---|
 | Documentation index | [docs/en/README.md](docs/en/README.md) | [docs/zh-CN/README.md](docs/zh-CN/README.md) |
 | Public hardware inventory / BOM status | [docs/en/hardware/public-bom.md](docs/en/hardware/public-bom.md) | [docs/zh-CN/hardware/public-bom.md](docs/zh-CN/hardware/public-bom.md) |
+| Community-derived BOM reconstruction | [docs/en/hardware/community-bom-reconstruction.md](docs/en/hardware/community-bom-reconstruction.md) | [docs/zh-CN/hardware/community-bom-reconstruction.md](docs/zh-CN/hardware/community-bom-reconstruction.md) |
 | Mechanical structure | [docs/en/hardware/mechanical-structure.md](docs/en/hardware/mechanical-structure.md) | [docs/zh-CN/hardware/mechanical-structure.md](docs/zh-CN/hardware/mechanical-structure.md) |
 | Electronics and buses | [docs/en/hardware/electronics-and-buses.md](docs/en/hardware/electronics-and-buses.md) | [docs/zh-CN/hardware/electronics-and-buses.md](docs/zh-CN/hardware/electronics-and-buses.md) |
 | Runtime architecture | [docs/en/software/runtime-architecture.md](docs/en/software/runtime-architecture.md) | [docs/zh-CN/software/runtime-architecture.md](docs/zh-CN/software/runtime-architecture.md) |
@@ -53,10 +55,10 @@ open-microduck/
 ├── docs/
 │   ├── en/                 English documentation
 │   └── zh-CN/              Simplified Chinese documentation
-├── hardware/               Project-owned hardware research outputs
-├── simulation/             Project-owned simulation research outputs
-├── control/                Project-owned control/interoperability research
-└── learning/               Project-owned learning/reproducibility research
+├── hardware/               Project-owned public hardware-research outputs
+├── simulation/             Project-owned public simulation-research outputs
+├── control/                Project-owned public control/interoperability research
+└── learning/               Project-owned public learning/reproducibility research
 ```
 
 Additional languages can be added as sibling documentation trees such as `docs/ja/`, `docs/fr/`, or `docs/de/` without changing the English canonical paths.
@@ -74,11 +76,11 @@ Community projects are indexed separately in the reverse-engineering ecosystem d
 
 ## Contributions
 
-Corrections, source-backed technical notes, reproducible measurements, independent reconstructions, simulation validation, and links to relevant public projects are welcome.
+Corrections, source-backed technical notes, reproducible public measurements, independent reconstructions from public sources, simulation validation, and links to relevant public projects are welcome.
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md), [DISCLAIMER.md](DISCLAIMER.md), and the research guidelines before submitting material.
 
-Do not submit leaked or confidential information, unlawfully obtained proprietary files, private credentials, or third-party material without compatible rights and attribution.
+Do not submit leaked, confidential, private, unrelated proprietary, or otherwise non-public engineering information; unlawfully obtained proprietary files; private credentials; or third-party material without compatible rights and attribution.
 
 ## License status
 
