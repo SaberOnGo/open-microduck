@@ -15,6 +15,7 @@ OpenMicroDuck 的文档分成两类：
 2. [Microduck 软件架构：一眼看懂](software/runtime-architecture.md) —— 感知、高层行为、运动 AI 和电机控制怎么配合。
 3. [第一步先做仿真](getting-started/simulation-first.md) —— 不碰真实硬件，先让虚拟机器人动起来。
 4. [公开复现路线图](getting-started/public-reproduction-roadmap.md) —— 按阶段做研究和验证。
+5. [硬件 Bring-up 与标定](getting-started/hardware-bringup-and-calibration.md) —— 第一次上真机时按正确顺序排查。
 
 ## 硬件
 
@@ -30,6 +31,9 @@ OpenMicroDuck 的文档分成两类：
 
 - [Microduck 软件架构：一眼看懂](software/runtime-architecture.md) —— **软件部分最推荐的入口。**
 - [控制循环：Microduck 到底怎么动起来](software/control-loop-and-sensor-dataflow.md) —— 50 Hz 运动循环和 61 维 Policy 输入。
+- [Autonomous Brain：高层行为怎么决定](software/autonomous-brain.md) —— 感知结果怎样变成“走 / 转 / 看 / 休息”等决定。
+- [运动学与里程计](software/kinematics-and-odometry.md) —— 怎么算脚、头、传感器位置，以及怎么估计机器人移动了多远。
+- [`robotd` 硬件协议](software/robotd-hardware-protocol.md) —— Bus ID、Timing、读取/写入、Startup Register、IMU Data Block。
 
 ## 仿真与训练
 
@@ -39,6 +43,10 @@ OpenMicroDuck 的文档分成两类：
 - [可复现训练与 ONNX 导出](simulation/reproducible-training-and-export.md)
 - [仿真模型资产参考](simulation/model-assets-reference.md)
 - [Sim-to-real 参数总表](simulation/sim-to-real-parameter-reference.md)
+
+## 工具
+
+- [上游参数 Diff 工具](../../tools/upstream-diff/README.md) —— 自动提取部分官方公开参数并比较不同上游版本。
 
 ## 来源、未知项和社区研究
 
