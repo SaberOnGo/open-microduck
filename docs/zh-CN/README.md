@@ -16,7 +16,8 @@
 
 ## 研究生态
 
-- [逆向分析与社区项目](ecosystem/reverse-engineering-projects.md)
+- [逆向分析与已审查社区项目](ecosystem/reverse-engineering-projects.md)
+- [更宽范围 GitHub 仓库发现快照](ecosystem/discovered-repositories.md)
 - [资料来源与证据地图](sources.md)
 - [研究规范](research-guidelines.md)
 - [来源与许可证](legal/provenance-and-licenses.md)
