@@ -16,8 +16,9 @@ This is the English documentation tree for OpenMicroDuck. It collects public, at
 - [Onboard runtime architecture](software/runtime-architecture.md)
 - [Simulation and reinforcement learning](simulation/model-and-rl.md)
 
-## Research ecosystem
+## Research ecosystem and project docs
 
+- [Public documentation roadmap](roadmap.md)
 - [Reviewed reverse-engineering and community projects](ecosystem/reverse-engineering-projects.md)
 - [Broader GitHub repository discovery snapshot](ecosystem/discovered-repositories.md)
 - [Sources and evidence map](sources.md)
@@ -27,7 +28,7 @@ This is the English documentation tree for OpenMicroDuck. It collects public, at
 ## Documentation policy
 
 1. English and Simplified Chinese are maintained as parallel first-class documentation trees.
-2. Pages in this English tree should link to English pages by default; the language switch is kept at the top of the page or section.
+2. Pages in this English tree should link to English pages by default; language switching belongs at the top of the page or section.
 3. Prefer official product documentation and official source code over secondary reporting.
 4. Label third-party reconstructions as community-derived rather than official specifications.
 5. Record conflicts between sources instead of silently choosing a convenient value.
