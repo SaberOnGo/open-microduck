@@ -1,15 +1,16 @@
 # OpenMicroDuck
 
+<p align="center"><strong>🌐 Language / 语言</strong></p>
 <p align="center">
-  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-1f6feb?style=for-the-badge" alt="English documentation"></a>
-  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/语言-简体中文文档-d73a49?style=for-the-badge" alt="简体中文文档"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/ENGLISH-1f6feb?style=for-the-badge" alt="English" height="44"></a>&nbsp;&nbsp;
+  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-d73a49?style=for-the-badge" alt="简体中文" height="44"></a>
 </p>
 
 **Independent, unofficial Microduck research, reverse-engineering, simulation, and documentation project.**
 
 OpenMicroDuck organizes publicly available information about **Microduck** into a source-driven technical reference. It focuses on public hardware information, BOM research, mechanical structure, electronics, software architecture, simulation, reinforcement learning, interoperability research, and reproducible community reverse engineering.
 
-**简体中文简介：** OpenMicroDuck 是一个独立、非官方的 **Microduck 逆向分析与技术资料整理项目**，重点整理公开可验证的 **Microduck 硬件、BOM、电子元器件、机械结构、电控、仿真、强化学习和社区逆向项目**。完整中文内容请点击上方红色 **「简体中文文档」** 按钮进入。
+**简体中文简介：** OpenMicroDuck 是一个独立、非官方的 **Microduck 逆向分析与技术资料整理项目**，重点整理公开可验证的 **Microduck 硬件、BOM、电子元器件、机械结构、电控、仿真、强化学习和社区逆向项目**。完整中文内容请点击上方红色 **「简体中文」** 按钮进入。
 
 > OpenMicroDuck is not affiliated with, endorsed by, sponsored by, or officially connected with Pollen Robotics or Hugging Face. Microduck and related names, logos, trademarks, and branding belong to their respective owners.
 
