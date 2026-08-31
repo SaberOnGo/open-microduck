@@ -1,20 +1,13 @@
-# Learning
+# Learning Research Outputs
 
-This directory contains reinforcement-learning, policy-training, evaluation, and sim-to-real work for OpenMicroDuck.
+This directory is reserved for OpenMicroDuck-owned public reinforcement-learning experiments, evaluation results, and reproducibility tooling.
 
-Planned topics include:
+For maintained documentation of the official Microduck RL stack, see:
 
-- standing and balance;
-- walking and turning;
-- disturbance recovery;
-- fall recovery;
-- dynamic locomotion;
-- manipulation;
-- multi-skill policy architectures;
-- observation/action design;
-- reward design;
-- curriculum learning;
-- domain randomization;
-- physical-hardware deployment and evaluation.
+- [Simulation and reinforcement learning](../docs/en/simulation/model-and-rl.md)
+- [仿真与强化学习](../docs/zh-CN/simulation/model-and-rl.md)
+- [Community simulator / RL ports](../docs/en/ecosystem/reverse-engineering-projects.md)
 
-Training artifacts should record simulator version, robot-model revision, parameter set, observation/action definitions, reward configuration, randomization ranges, and evaluation results so experiments can be reproduced.
+Public experimental artifacts should record simulator/model revision, source commit, observation/action definitions, reward configuration, randomization settings, and evaluation methodology where relevant.
+
+Private or unrelated engineering/training data must not be added to this public repository.
