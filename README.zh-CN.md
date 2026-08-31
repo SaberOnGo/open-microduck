@@ -13,6 +13,7 @@ OpenMicroDuck 将互联网上已经公开的 **Microduck** 技术信息整理为
 ## 本项目整理什么
 
 - 来自公开资料和官方源码的硬件清单；
+- 与官方规格分开保存的社区推导 BOM、紧固件、轴承和装配重建；
 - 电机、关节、传感器、主控、电池、总线与控制环信息；
 - 基于官方公开仿真资产整理的机械与运动学结构；
 - 官方运行时、仿真和强化学习架构；
@@ -25,6 +26,7 @@ OpenMicroDuck 将互联网上已经公开的 **Microduck** 技术信息整理为
 |---|---|---|
 | 文档索引 | [docs/zh-CN/README.md](docs/zh-CN/README.md) | [docs/en/README.md](docs/en/README.md) |
 | 公开硬件清单 / BOM 状态 | [docs/zh-CN/hardware/public-bom.md](docs/zh-CN/hardware/public-bom.md) | [docs/en/hardware/public-bom.md](docs/en/hardware/public-bom.md) |
+| 社区推导 BOM / 紧固件重建 | [docs/zh-CN/hardware/community-bom-reconstruction.md](docs/zh-CN/hardware/community-bom-reconstruction.md) | [docs/en/hardware/community-bom-reconstruction.md](docs/en/hardware/community-bom-reconstruction.md) |
 | 机械结构 | [docs/zh-CN/hardware/mechanical-structure.md](docs/zh-CN/hardware/mechanical-structure.md) | [docs/en/hardware/mechanical-structure.md](docs/en/hardware/mechanical-structure.md) |
 | 电控与总线 | [docs/zh-CN/hardware/electronics-and-buses.md](docs/zh-CN/hardware/electronics-and-buses.md) | [docs/en/hardware/electronics-and-buses.md](docs/en/hardware/electronics-and-buses.md) |
 | 运行时架构 | [docs/zh-CN/software/runtime-architecture.md](docs/zh-CN/software/runtime-architecture.md) | [docs/en/software/runtime-architecture.md](docs/en/software/runtime-architecture.md) |
@@ -55,8 +57,8 @@ open-microduck/
 │   └── zh-CN/              简体中文文档
 ├── hardware/               本项目自行产生的公开硬件研究资料
 ├── simulation/             本项目自行产生的公开仿真研究资料
-├── control/                本项目自行产生的控制/互操作研究资料
-└── learning/               本项目自行产生的训练与可复现研究资料
+├── control/                本项目自行产生的公开控制/互操作研究资料
+└── learning/               本项目自行产生的公开训练与可复现研究资料
 ```
 
 未来增加日语、法语、德语等语言时，可增加 `docs/ja/`、`docs/fr/`、`docs/de/` 等同级目录，不改变英文主文档路径。
@@ -72,11 +74,11 @@ open-microduck/
 
 ## 参与贡献
 
-欢迎提交有公开来源支撑的技术修正、可复现实验、独立测量、结构重建、仿真验证，以及与 Microduck 相关的公开项目链接。
+欢迎提交有公开来源支撑的技术修正、可复现公开实测、基于公开来源的独立重建、仿真验证，以及与 Microduck 相关的公开项目链接。
 
-提交前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)、[DISCLAIMER.md](DISCLAIMER.md) 和研究规范。
+提交前请阅读 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)、[DISCLAIMER.zh-CN.md](DISCLAIMER.zh-CN.md) 和研究规范。
 
-不得提交泄露或保密资料、非法获得的专有文件、私密凭据，或没有相应授权/许可的第三方内容。
+不得提交泄露、保密、私有、与本项目无关的专有或其它未公开工程资料；不得提交非法获得的专有文件、私密凭据，或没有相应授权/许可的第三方内容。
 
 ## 许可证状态
 
