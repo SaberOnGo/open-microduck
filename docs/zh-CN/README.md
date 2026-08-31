@@ -5,6 +5,7 @@
 ## 硬件
 
 - [公开硬件清单 / BOM 状态](hardware/public-bom.md)
+- [社区推导 BOM 与紧固件重建](hardware/community-bom-reconstruction.md)
 - [机械结构与运动学](hardware/mechanical-structure.md)
 - [电控、总线、传感器与电源](hardware/electronics-and-buses.md)
 
@@ -26,6 +27,6 @@
 2. 第三方逆向结果必须明确写成“社区推导”，不能包装成官方规格。
 3. 不同来源有冲突时保留冲突记录，不静默选择更方便的数字。
 4. 不上传没有以兼容许可证公开的 Microduck 专有机械、电路、PCB、原理图等设计文件。
-5. 不公开保密、泄露、私有或与本公开项目无关的信息。
+5. 不公开保密、泄露、私有、与本项目无关的专有或其它未公开工程信息。
 
 最近一次资料检索：**2026-08-31**。
