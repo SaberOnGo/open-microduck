@@ -15,6 +15,7 @@ Read these in order:
 2. [How the Microduck Software Fits Together](software/runtime-architecture.md) — sensing, behavior, movement AI and motors.
 3. [Simulation First](getting-started/simulation-first.md) — run the virtual robot before touching hardware.
 4. [Public Reproduction Roadmap](getting-started/public-reproduction-roadmap.md) — staged research path.
+5. [Hardware Bring-up and Calibration](getting-started/hardware-bringup-and-calibration.md) — first real-hardware checks in the right order.
 
 ## Hardware
 
@@ -30,6 +31,9 @@ Read these in order:
 
 - [How the Microduck Software Fits Together](software/runtime-architecture.md) — **best software entry page**.
 - [Control Loop: How the Robot Moves](software/control-loop-and-sensor-dataflow.md) — 50 Hz movement loop and the 61-D policy input.
+- [Autonomous Brain and High-Level Behavior](software/autonomous-brain.md) — how perception becomes “walk / turn / look / rest” decisions.
+- [Kinematics and Odometry](software/kinematics-and-odometry.md) — how the robot computes feet/head/sensor positions and estimates movement.
+- [`robotd` Hardware Protocol](software/robotd-hardware-protocol.md) — bus IDs, timing, reads/writes, startup registers and IMU block.
 
 ## Simulation and learning
 
@@ -39,6 +43,10 @@ Read these in order:
 - [Reproducible Training and ONNX Export](simulation/reproducible-training-and-export.md)
 - [Simulation Model Assets Reference](simulation/model-assets-reference.md)
 - [Sim-to-Real Parameter Reference](simulation/sim-to-real-parameter-reference.md)
+
+## Tools
+
+- [Upstream Parameter Diff Tool](../../tools/upstream-diff/README.md) — extract selected public source parameters into JSON and compare upstream revisions.
 
 ## Sources, uncertainty and community research
 

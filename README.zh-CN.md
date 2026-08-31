@@ -40,6 +40,10 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 | 看懂软件架构 | [Microduck 软件架构：一眼看懂](docs/zh-CN/software/runtime-architecture.md) |
 | 先跑虚拟机器人 | [第一步先做仿真](docs/zh-CN/getting-started/simulation-first.md) |
 | 按步骤做公开复现 | [公开复现路线图](docs/zh-CN/getting-started/public-reproduction-roadmap.md) |
+| 第一次上真机 | [硬件 Bring-up 与标定](docs/zh-CN/getting-started/hardware-bringup-and-calibration.md) |
+| 看懂高层行为怎么决定 | [Autonomous Brain](docs/zh-CN/software/autonomous-brain.md) |
+| 看懂脚/头位置和里程计 | [运动学与里程计](docs/zh-CN/software/kinematics-and-odometry.md) |
+| 查真机总线细节 | [`robotd` 硬件协议](docs/zh-CN/software/robotd-hardware-protocol.md) |
 | 查硬件参数 | [硬件参数总表](docs/zh-CN/hardware/parameter-reference.md) |
 | 看懂结构怎么装 | [结构与装配地图](docs/zh-CN/hardware/structure-and-assembly-map.md) |
 | 查 Sim-to-real 参数 | [Sim-to-real 参数总表](docs/zh-CN/simulation/sim-to-real-parameter-reference.md) |
@@ -67,6 +71,10 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 
 - [Microduck 软件架构：一眼看懂](docs/zh-CN/software/runtime-architecture.md)
 - [控制循环：Microduck 到底怎么动起来](docs/zh-CN/software/control-loop-and-sensor-dataflow.md)
+- [Autonomous Brain：高层行为怎么决定](docs/zh-CN/software/autonomous-brain.md)
+- [运动学与里程计](docs/zh-CN/software/kinematics-and-odometry.md)
+- [`robotd` 硬件协议](docs/zh-CN/software/robotd-hardware-protocol.md)
+- [硬件 Bring-up 与标定](docs/zh-CN/getting-started/hardware-bringup-and-calibration.md)
 
 ### 仿真与训练
 
@@ -74,6 +82,10 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 - [技能、Policy 与运行时切换](docs/zh-CN/simulation/policy-catalog-and-switching.md)
 - [可复现训练与 ONNX 导出](docs/zh-CN/simulation/reproducible-training-and-export.md)
 - [Sim-to-real 参数总表](docs/zh-CN/simulation/sim-to-real-parameter-reference.md)
+
+### 工具
+
+- [上游参数 Diff 工具](tools/upstream-diff/README.md)
 
 ### 来源与研究状态
 
