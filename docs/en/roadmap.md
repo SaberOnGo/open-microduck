@@ -6,18 +6,43 @@ This roadmap tracks the **public research and documentation project**. It is not
 
 ## Current priorities
 
-1. Keep a clear official product-specification baseline separate from development-source details and community reconstruction.
-2. Maintain the public Microduck hardware inventory without mislabeling it as an official complete BOM.
-3. Keep the control-loop/dataflow documentation aligned with the official runtime as `robotd`, sensor services, and deployment behavior evolve.
-4. Track the official policy/task catalog and explain policy switching in a way that is understandable without reading the RL source first.
-5. Keep the reproducible training → export → ONNX → validation path synchronized with `microduck_rl`.
-6. Track MJCF/model variants, asset provenance, and license boundaries.
-7. Maintain an explicit list of unresolved questions instead of filling gaps with assumptions.
-8. Record upstream commit SHAs for version-sensitive research.
-9. Add reproducible public measurements from production hardware when they become available.
-10. Keep English and Simplified Chinese documentation aligned topic-by-topic, with full Chinese explanations rather than abbreviated summaries.
+1. Keep the documentation understandable to a reader who has never built a robot before: start with a project map and staged reproduction path, then expose detailed parameters.
+2. Keep a clear official product-specification baseline separate from development-source details, official simulation-model values, and community reconstruction.
+3. Maintain a detailed public hardware/control parameter reference without mislabeling it as an official complete production BOM.
+4. Turn public MJCF/mesh information into an understandable structure and assembly map while preserving the simulation-model-versus-manufacturing boundary.
+5. Keep the control-loop/dataflow documentation aligned with the official runtime as `robotd`, sensor services, policies and deployment behavior evolve.
+6. Track the official policy/task catalog and preserve training/runtime compatibility details such as observation order, action order, filtering, gains and control rate.
+7. Keep the reproducible simulation → training → export → ONNX → validation path synchronized with `microduck_rl`.
+8. Maintain an explicit sim-to-real parameter reference for BAM, backlash, voltage, delay, friction, mass/CoM/inertia, IMU/encoder errors, contact and terrain.
+9. Maintain an explicit list of unresolved questions instead of filling hardware gaps with assumptions.
+10. Record upstream commit SHAs for version-sensitive research and add reproducible public hardware measurements when available.
+11. Keep English and Simplified Chinese documentation aligned topic-by-topic, with full Chinese explanations rather than abbreviated summaries.
+
+## Recommended reader path
+
+```text
+Start Here
+   ↓
+Simulation First
+   ↓
+Hardware Parameter Reference
+   ↓
+Structure and Assembly Map
+   ↓
+Sim-to-Real Parameter Reference
+   ↓
+Detailed runtime / RL / provenance pages
+```
+
+The public reproduction workflow is deliberately staged so a researcher can validate software, simulation, bus timing, sensor conventions and mechanical subassemblies separately before combining them.
 
 ## Documentation areas
+
+### Getting started and reproduction
+
+- beginner-friendly project map;
+- simulation-first quickstart using official MJCF + existing official ONNX policies;
+- staged public reproduction roadmap from software baseline to hardware validation.
 
 ### Product and evidence
 
@@ -29,17 +54,20 @@ This roadmap tracks the **public research and documentation project**. It is not
 ### Hardware
 
 - public hardware inventory and BOM status;
+- detailed hardware/control parameter reference;
 - manufacturer datasheet/documentation index;
+- structure and assembly map;
 - mechanical structure and kinematics;
-- electronics, buses, sensors, audio, power;
+- electronics, buses, sensors, audio and power;
 - community-derived fastener/bearing/assembly reconstruction.
 
 ### Software and control
 
 - onboard runtime architecture;
-- control loop and sensor dataflow;
+- 50 Hz control loop and sensor dataflow;
+- servo IDs, home pose, bus timing and IMU conventions;
 - transport/service boundaries;
-- future public runtime topics such as update/recovery and media/remote-control paths when they become useful as standalone guides.
+- future public runtime topics such as update/recovery and media/remote-control paths when useful as standalone guides.
 
 ### Simulation and reinforcement learning
 
@@ -47,7 +75,8 @@ This roadmap tracks the **public research and documentation project**. It is not
 - policy/task catalog and runtime switching;
 - reproducible training and ONNX export;
 - MJCF/model asset reference;
-- actuator modeling, backlash, and domain randomization.
+- detailed sim-to-real parameter map covering BAM, backlash, domain randomization, contact and terrain;
+- explicit version conflicts such as policy-lineage-dependent runtime filtering.
 
 ### Ecosystem and provenance
 
@@ -55,9 +84,11 @@ This roadmap tracks the **public research and documentation project**. It is not
 - source and license tracking;
 - reproducible public measurements and validation methods.
 
-## Completed in the 2026-08-31 documentation expansion
+## Completed documentation expansions on 2026-08-31
 
-The current documentation set now includes paired English / Simplified Chinese pages for:
+The current documentation set includes paired English / Simplified Chinese pages for:
+
+### Foundation set
 
 - official specifications;
 - policy catalog and switching;
@@ -68,10 +99,29 @@ The current documentation set now includes paired English / Simplified Chinese p
 - component datasheet index;
 - simulation model assets reference.
 
+### Reverse-engineering / reproduction set
+
+- Start Here beginner guide;
+- Simulation First quickstart;
+- public reproduction roadmap;
+- detailed hardware parameter reference;
+- structure and assembly map;
+- sim-to-real parameter reference.
+
+## Next useful public research topics
+
+Good future additions, when public evidence is sufficient, include:
+
+- reproducible scripts/tables that automatically extract joint limits, inertial masses, sites and mesh-instance counts from pinned MJCF files;
+- public measurement protocols for servo latency, backlash, voltage sag, IMU orientation and sole friction;
+- revision-to-revision parameter diffs as upstream Microduck evolves;
+- clearer public wiring/interface diagrams where official source evidence supports them;
+- additional community assembly validation, always separated from official production facts.
+
 ## Contribution principle
 
 New entries should be publicly attributable and suitable for an open repository. Private, confidential, leaked, unrelated proprietary, or otherwise non-public engineering information is outside the scope of OpenMicroDuck.
 
 When a value cannot be proven from a public source, label it as unresolved rather than guessing.
 
-See the [research guidelines](research-guidelines.md), [sources and evidence map](sources.md), and [open questions](research/open-questions-and-conflicts.md).
+See the [Start Here guide](getting-started/README.md), [research guidelines](research-guidelines.md), [sources and evidence map](sources.md), and [open questions](research/open-questions-and-conflicts.md).
