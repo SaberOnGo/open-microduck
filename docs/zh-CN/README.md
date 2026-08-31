@@ -16,8 +16,9 @@
 - [机载运行时架构](software/runtime-architecture.md)
 - [仿真与强化学习](simulation/model-and-rl.md)
 
-## 研究生态
+## 研究生态与项目文档
 
+- [公开文档路线图](roadmap.md)
 - [已审查的逆向分析与社区项目](ecosystem/reverse-engineering-projects.md)
 - [更宽范围 GitHub 仓库发现快照](ecosystem/discovered-repositories.md)
 - [资料来源与证据地图](sources.md)
