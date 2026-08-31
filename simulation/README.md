@@ -1,16 +1,13 @@
-# Simulation
+# Simulation Research Outputs
 
-This directory contains OpenMicroDuck simulation models, parameter sets, environments, validation data, and simulator-specific tooling.
+This directory is reserved for OpenMicroDuck-owned public simulation experiments, validation data, and tooling.
 
-Planned work includes:
+The maintained documentation of the official Microduck simulation/RL stack is here:
 
-- rigid-body and joint models;
-- mass, inertia, center-of-mass, and joint-limit parameters;
-- actuator torque/speed limits and response dynamics;
-- friction, backlash, deadband, and contact models;
-- sensor noise and latency models;
-- domain randomization;
-- system identification;
-- simulation-to-real trajectory comparison.
+- [Simulation and reinforcement learning](../docs/en/simulation/model-and-rl.md)
+- [仿真与强化学习](../docs/zh-CN/simulation/model-and-rl.md)
+- [Mechanical structure](../docs/en/hardware/mechanical-structure.md)
 
-Simulation parameters should identify whether each value is **public-source**, **measured**, **observed**, **inferred**, or **assumed**. See [`../docs/RESEARCH_GUIDELINES.md`](../docs/RESEARCH_GUIDELINES.md).
+Any model parameter added here should state whether it comes from an official source, public measurement, observation, community reconstruction, inference, or an explicit assumption.
+
+Do not mix private or unrelated engineering data into public Microduck simulation datasets.
