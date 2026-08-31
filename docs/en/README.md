@@ -5,6 +5,7 @@ This documentation tree collects public, attributable information about Microduc
 ## Hardware
 
 - [Public hardware inventory / BOM status](hardware/public-bom.md)
+- [Community-derived BOM and fastener reconstruction](hardware/community-bom-reconstruction.md)
 - [Mechanical structure and kinematics](hardware/mechanical-structure.md)
 - [Electronics, buses, sensors, and power](hardware/electronics-and-buses.md)
 
@@ -26,6 +27,6 @@ This documentation tree collects public, attributable information about Microduc
 2. Label third-party reconstructions as community-derived rather than official specifications.
 3. Record conflicts between sources instead of silently choosing the more convenient value.
 4. Do not upload proprietary Microduck mechanical/electronic design files that were not publicly released under a compatible license.
-5. Do not publish confidential, leaked, private, or unrelated project information.
+5. Do not publish confidential, leaked, private, unrelated proprietary, or otherwise non-public engineering information.
 
 Last source sweep: **2026-08-31**.
