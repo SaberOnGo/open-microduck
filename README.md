@@ -1,120 +1,89 @@
 # OpenMicroDuck
 
-**Independent Microduck reverse engineering, hardware research, simulation, reinforcement learning, and sim-to-real robotics project.**
+[English](README.md) | [简体中文](README.zh-CN.md)
 
-> **Unofficial and independent project.** OpenMicroDuck is not affiliated with, endorsed by, sponsored by, or officially connected with Pollen Robotics or Hugging Face. `Microduck` and related names, marks, and branding belong to their respective owners.
+**Independent, unofficial Microduck research, reverse-engineering, simulation, and documentation project.**
 
-OpenMicroDuck is a community-oriented research project focused on understanding the architecture and behavior of **Microduck**, building reproducible simulation models, studying compact biped robot hardware, and developing independently designed robotics systems.
+> OpenMicroDuck is not affiliated with, endorsed by, sponsored by, or officially connected with Pollen Robotics or Hugging Face. Microduck and related names, logos, trademarks, and branding belong to their respective owners.
 
-The project aims to turn scattered research into reproducible engineering knowledge: from servos, sensors, buses, and control electronics to physics simulation, reinforcement learning, domain randomization, and sim-to-real deployment.
+OpenMicroDuck organizes publicly available information about **Microduck** into a source-driven technical reference. The project focuses on public hardware information, mechanical structure, software architecture, simulation, reinforcement learning, interoperability research, and reproducible community reverse engineering.
 
-## Goals
+The repository does **not** claim that Microduck is open-source hardware. Pollen Robotics currently states that the open-source commitment covers the software stack, while the mechanical and electronic design files are not published as open-source hardware.
 
-- Study and document the observable hardware and software architecture of Microduck.
-- Build reproducible Microduck-oriented simulation models.
-- Research servo dynamics, latency, backlash, friction, power behavior, and communication buses.
-- Model sensors such as IMUs, cameras, ranging sensors, and joint feedback.
-- Develop reinforcement-learning workflows for locomotion, recovery, manipulation, and other embodied behaviors.
-- Develop practical sim-to-real methods, including domain randomization and system identification.
-- Design and validate independently developed mechanical, electronic, firmware, and control solutions.
-- Make compact embodied-robotics research easier to reproduce for developers, students, researchers, and hobbyists.
+## What is documented here
 
-## Project Scope
+- public and source-code-derived hardware inventory;
+- motors, joint layout, sensors, compute, battery, buses, and control-loop information;
+- mechanical and kinematic structure derived from publicly released simulation assets;
+- official runtime and reinforcement-learning architecture;
+- community reverse-engineering, simulation, CAD reconstruction, and tooling projects;
+- provenance, confidence labels, licensing notes, and known inconsistencies between sources.
+
+## Start here
+
+| Topic | English | 中文 |
+|---|---|---|
+| Documentation index | [docs/en/README.md](docs/en/README.md) | [docs/zh-CN/README.md](docs/zh-CN/README.md) |
+| Public hardware inventory / BOM status | [docs/en/hardware/public-bom.md](docs/en/hardware/public-bom.md) | [docs/zh-CN/hardware/public-bom.md](docs/zh-CN/hardware/public-bom.md) |
+| Mechanical structure | [docs/en/hardware/mechanical-structure.md](docs/en/hardware/mechanical-structure.md) | [docs/zh-CN/hardware/mechanical-structure.md](docs/zh-CN/hardware/mechanical-structure.md) |
+| Electronics and buses | [docs/en/hardware/electronics-and-buses.md](docs/en/hardware/electronics-and-buses.md) | [docs/zh-CN/hardware/electronics-and-buses.md](docs/zh-CN/hardware/electronics-and-buses.md) |
+| Runtime architecture | [docs/en/software/runtime-architecture.md](docs/en/software/runtime-architecture.md) | [docs/zh-CN/software/runtime-architecture.md](docs/zh-CN/software/runtime-architecture.md) |
+| Simulation and RL | [docs/en/simulation/model-and-rl.md](docs/en/simulation/model-and-rl.md) | [docs/zh-CN/simulation/model-and-rl.md](docs/zh-CN/simulation/model-and-rl.md) |
+| Reverse-engineering ecosystem | [docs/en/ecosystem/reverse-engineering-projects.md](docs/en/ecosystem/reverse-engineering-projects.md) | [docs/zh-CN/ecosystem/reverse-engineering-projects.md](docs/zh-CN/ecosystem/reverse-engineering-projects.md) |
+| Sources and evidence | [docs/en/sources.md](docs/en/sources.md) | [docs/zh-CN/sources.md](docs/zh-CN/sources.md) |
+| Licensing and provenance | [docs/en/legal/provenance-and-licenses.md](docs/en/legal/provenance-and-licenses.md) | [docs/zh-CN/legal/provenance-and-licenses.md](docs/zh-CN/legal/provenance-and-licenses.md) |
+
+## Evidence policy
+
+Technical statements should be labeled or written so readers can distinguish:
+
+- **Official product spec** — published by Pollen Robotics / Hugging Face;
+- **Official source** — visible in the upstream software, simulation model, configuration, or hardware bring-up notes;
+- **Community reconstruction** — independently derived from public assets or observation;
+- **Unverified / provisional** — plausible or present in a development branch, but not established as a final production specification.
+
+When official product documentation and a community reconstruction disagree, the official source takes precedence and the discrepancy should be recorded rather than silently resolved.
+
+## Repository structure
 
 ```text
-OpenMicroDuck
-├── hardware/       Mechanical, electronic, servo, sensor, and power research
-├── simulation/     Robot models, physics parameters, environments, and validation
-├── control/        MCU, servo bus, low-level control, timing, and robot I/O
-├── learning/       RL policies, locomotion, recovery, manipulation, and sim-to-real
-└── docs/           Research notes, methodology, architecture, roadmap, and references
+open-microduck/
+├── README.md
+├── README.zh-CN.md
+├── docs/
+│   ├── en/                 English documentation
+│   └── zh-CN/              Simplified Chinese documentation
+├── hardware/               Project-owned hardware research outputs
+├── simulation/             Project-owned simulation research outputs
+├── control/                Project-owned control/interoperability research
+└── learning/               Project-owned learning/reproducibility research
 ```
 
-The project may study Microduck as a reference system, but the long-term goal is **independent engineering and reproducible research**, not redistribution of proprietary mechanical or electronic design files.
+Additional languages can be added as sibling documentation trees such as `docs/ja/`, `docs/fr/`, or `docs/de/` without changing the English canonical paths.
 
-## Research Areas
+## Upstream projects
 
-### Hardware
+The primary upstream references are:
 
-- Servo characterization and actuator modeling
-- Joint layout and kinematics
-- Main controller and auxiliary MCU architecture
-- Servo-bus topology and timing
-- IMU and other sensor integration
-- Power distribution and battery behavior
-- Mechanical mass, inertia, friction, and backlash estimation
+- Pollen Robotics Microduck: https://github.com/pollen-robotics/microduck
+- Microduck RL: https://github.com/pollen-robotics/microduck_rl
+- Product page: https://pollen-robotics.com/microduck/
+- Press kit / public specifications: https://pollen-robotics.com/microduck/press-kit/
 
-### Simulation
+Community projects are indexed separately in the reverse-engineering ecosystem documents; inclusion there does not imply endorsement or verification.
 
-- Robot description and rigid-body model
-- Joint limits and actuator constraints
-- Contact and friction modeling
-- Sensor noise and latency
-- Voltage and torque variation
-- Parameter identification
-- Domain randomization
-- Simulation-to-real validation
+## Contributions
 
-### Reinforcement Learning
+Corrections, source-backed technical notes, reproducible measurements, independent reconstructions, simulation validation, and links to relevant public projects are welcome.
 
-- Standing and balancing
-- Walking and turning
-- Fall recovery
-- Dynamic locomotion
-- Manipulation
-- Multi-skill policies
-- Policy deployment on physical hardware
+Please read [CONTRIBUTING.md](CONTRIBUTING.md), [DISCLAIMER.md](DISCLAIMER.md), and the research guidelines before submitting material.
 
-## Research Method
+Do not submit leaked or confidential information, unlawfully obtained proprietary files, private credentials, or third-party material without compatible rights and attribution.
 
-OpenMicroDuck favors reproducible, evidence-based engineering. Parameters should be derived from one or more of:
+## License status
 
-1. Publicly available documentation and software.
-2. Direct measurements on legally obtained hardware.
-3. Black-box behavioral testing and system identification.
-4. Independent mechanical/electronic design and prototyping.
-5. Simulation-to-real comparison and iterative calibration.
-
-Measured values, inferred values, assumptions, and placeholders should be clearly distinguished in project documentation.
-
-## Current Status
-
-The repository is in its **initial research and architecture phase**. Early work focuses on:
-
-- establishing the project documentation structure;
-- collecting verifiable Microduck architecture information;
-- characterizing candidate servos and sensors;
-- defining the simulation parameter set;
-- designing the control architecture needed for simulation and future physical prototypes.
-
-See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the working roadmap.
-
-## Relationship to Microduck
-
-Microduck is used here as a research reference and search term because this project studies that robot and related compact embodied-robotics techniques.
-
-OpenMicroDuck is an **independent, unofficial project**. It does not claim to be an official Microduck repository, an authorized derivative product, or a Pollen Robotics / Hugging Face project.
-
-Where upstream open-source software is used or modified, its original license and attribution requirements must be preserved.
-
-## Contributing
-
-Research contributions are welcome, especially reproducible measurements, simulation validation, actuator characterization, control experiments, and clearly sourced technical documentation.
-
-Before contributing reverse-engineering results, please read [`docs/RESEARCH_GUIDELINES.md`](docs/RESEARCH_GUIDELINES.md).
-
-## License
-
-A repository-wide license has **not yet been selected**. Until a license is added, do not assume that repository contents are licensed for unrestricted reuse.
-
-Third-party components retain their original licenses and copyrights.
-
-## Disclaimer
-
-This repository is provided for independent research, interoperability study, education, experimentation, and development. Contributors are responsible for ensuring that their contributions do not include confidential information, unlawfully obtained material, or proprietary files copied from third parties.
-
-See [`DISCLAIMER.md`](DISCLAIMER.md) for details.
+No repository-wide license has been selected yet. Third-party materials retain their original licenses and restrictions. In particular, some upstream Microduck 3D model assets are distributed under **CC BY-SA-NC**, while upstream software repositories use their stated software licenses. See the provenance documentation before copying or redistributing assets.
 
 ---
 
-**Search topics:** Microduck, Microduck reverse engineering, Microduck hardware, Microduck simulation, Microduck reinforcement learning, Microduck RL, Microduck servo, Microduck DIY, sim-to-real robotics, compact biped robot, embodied robotics.
+**Search topics:** Microduck, Microduck reverse engineering, Microduck hardware, Microduck BOM, Microduck teardown, Microduck CAD, Microduck simulation, Microduck reinforcement learning, Microduck RL, Dynamixel XL330, Microduck robot model, Microduck sim-to-real.
