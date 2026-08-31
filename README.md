@@ -40,6 +40,10 @@ The standard walking policy does **not** directly consume camera images or the r
 | Understand the software architecture | [How the Microduck Software Fits Together](docs/en/software/runtime-architecture.md) |
 | Run the virtual robot first | [Simulation First](docs/en/getting-started/simulation-first.md) |
 | Follow a reproduction path | [Public Reproduction Roadmap](docs/en/getting-started/public-reproduction-roadmap.md) |
+| Bring up real hardware safely | [Hardware Bring-up and Calibration](docs/en/getting-started/hardware-bringup-and-calibration.md) |
+| Understand high-level behavior | [Autonomous Brain](docs/en/software/autonomous-brain.md) |
+| Understand geometry and position estimation | [Kinematics and Odometry](docs/en/software/kinematics-and-odometry.md) |
+| Find hardware-bus details | [`robotd` Hardware Protocol](docs/en/software/robotd-hardware-protocol.md) |
 | Find hardware parameters | [Hardware Parameter Reference](docs/en/hardware/parameter-reference.md) |
 | Understand assembly | [Structure and Assembly Map](docs/en/hardware/structure-and-assembly-map.md) |
 | Find sim-to-real values | [Sim-to-Real Parameter Reference](docs/en/simulation/sim-to-real-parameter-reference.md) |
@@ -67,6 +71,10 @@ The standard walking policy does **not** directly consume camera images or the r
 
 - [How the Microduck Software Fits Together](docs/en/software/runtime-architecture.md)
 - [Control Loop: How the Robot Moves](docs/en/software/control-loop-and-sensor-dataflow.md)
+- [Autonomous Brain and High-Level Behavior](docs/en/software/autonomous-brain.md)
+- [Kinematics and Odometry](docs/en/software/kinematics-and-odometry.md)
+- [`robotd` Hardware Protocol](docs/en/software/robotd-hardware-protocol.md)
+- [Hardware Bring-up and Calibration](docs/en/getting-started/hardware-bringup-and-calibration.md)
 
 ### Simulation and learning
 
@@ -74,6 +82,10 @@ The standard walking policy does **not** directly consume camera images or the r
 - [Policy Catalog and Switching](docs/en/simulation/policy-catalog-and-switching.md)
 - [Reproducible Training and ONNX Export](docs/en/simulation/reproducible-training-and-export.md)
 - [Sim-to-Real Parameter Reference](docs/en/simulation/sim-to-real-parameter-reference.md)
+
+### Tools
+
+- [Upstream Parameter Diff Tool](tools/upstream-diff/README.md)
 
 ### Sources and research status
 
