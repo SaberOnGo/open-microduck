@@ -1,16 +1,12 @@
-# Control
+# Control and Interoperability Research Outputs
 
-This directory contains low-level control architecture and robot I/O research.
+This directory is reserved for OpenMicroDuck-owned **public** control, protocol, interoperability, and reproducibility work.
 
-Planned topics include:
+For the maintained description of the official Microduck control/runtime architecture, see:
 
-- main-compute to MCU communication;
-- servo-bus protocol and scheduling;
-- control-loop frequency and timing;
-- sensor timestamping and synchronization;
-- calibration and configuration;
-- deterministic command/feedback interfaces;
-- logging and diagnostics;
-- hardware safety limits and fault handling.
+- [Onboard runtime architecture](../docs/en/software/runtime-architecture.md)
+- [Electronics and buses](../docs/en/hardware/electronics-and-buses.md)
+- [机载运行时架构](../docs/zh-CN/software/runtime-architecture.md)
+- [电控与总线](../docs/zh-CN/hardware/electronics-and-buses.md)
 
-The control layer should remain usable both in simulation and on independently developed physical prototypes wherever practical.
+Material placed here must be derived from public sources or independently reproducible public observations. This directory is not a place for private product designs or unrelated internal engineering plans.
