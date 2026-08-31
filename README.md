@@ -1,12 +1,17 @@
 # OpenMicroDuck
 
-**English** | [简体中文](README.zh-CN.md)
+<p align="center">
+  <a href="README.md"><img src="https://img.shields.io/badge/Language-English-1f6feb?style=for-the-badge" alt="English documentation"></a>
+  <a href="README.zh-CN.md"><img src="https://img.shields.io/badge/语言-简体中文文档-d73a49?style=for-the-badge" alt="简体中文文档"></a>
+</p>
 
 **Independent, unofficial Microduck research, reverse-engineering, simulation, and documentation project.**
 
-> OpenMicroDuck is not affiliated with, endorsed by, sponsored by, or officially connected with Pollen Robotics or Hugging Face. Microduck and related names, logos, trademarks, and branding belong to their respective owners.
+OpenMicroDuck organizes publicly available information about **Microduck** into a source-driven technical reference. It focuses on public hardware information, BOM research, mechanical structure, electronics, software architecture, simulation, reinforcement learning, interoperability research, and reproducible community reverse engineering.
 
-OpenMicroDuck organizes publicly available information about **Microduck** into a source-driven technical reference. It focuses on public hardware information, mechanical structure, software architecture, simulation, reinforcement learning, interoperability research, and reproducible community reverse engineering.
+**简体中文简介：** OpenMicroDuck 是一个独立、非官方的 **Microduck 逆向分析与技术资料整理项目**，重点整理公开可验证的 **Microduck 硬件、BOM、电子元器件、机械结构、电控、仿真、强化学习和社区逆向项目**。完整中文内容请点击上方红色 **「简体中文文档」** 按钮进入。
+
+> OpenMicroDuck is not affiliated with, endorsed by, sponsored by, or officially connected with Pollen Robotics or Hugging Face. Microduck and related names, logos, trademarks, and branding belong to their respective owners.
 
 The repository does **not** claim that Microduck is open-source hardware. Pollen Robotics states that the open-source commitment covers the software stack; the mechanical and electronic design files are not published as open-source hardware.
 
@@ -105,4 +110,4 @@ No repository-wide license has been selected yet. Third-party materials retain t
 
 ---
 
-**Search topics:** Microduck, Microduck reverse engineering, Microduck hardware, Microduck BOM, Microduck teardown, Microduck CAD, Microduck simulation, Microduck reinforcement learning, Microduck RL, Dynamixel XL330, LSM6DSV16X, Radxa Zero 3W, Microduck robot model, Microduck sim-to-real.
+**Search topics:** Microduck, Microduck reverse engineering, Microduck hardware, Microduck BOM, Microduck teardown, Microduck CAD, Microduck electronics, Microduck components, Microduck simulation, Microduck reinforcement learning, Microduck RL, Dynamixel XL330, LSM6DSV16X, Radxa Zero 3W, Microduck robot model, Microduck sim-to-real, Microduck 逆向, Microduck 硬件, Microduck BOM, Microduck 电子元器件, Microduck 仿真, Microduck 强化学习.
