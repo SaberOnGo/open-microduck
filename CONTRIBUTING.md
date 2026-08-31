@@ -1,41 +1,51 @@
 # Contributing to OpenMicroDuck
 
-OpenMicroDuck welcomes reproducible research, measurements, simulation improvements, control experiments, documentation, and independently developed hardware work.
+[English](CONTRIBUTING.md) | [简体中文](CONTRIBUTING.zh-CN.md)
+
+OpenMicroDuck welcomes **public, source-backed, reproducible** research about Microduck: documentation corrections, measurements, protocol observations, simulation validation, model analysis, community-project references, and independently reproducible tooling.
 
 ## Before contributing
 
 Please read:
 
-- [`docs/RESEARCH_GUIDELINES.md`](docs/RESEARCH_GUIDELINES.md)
-- [`DISCLAIMER.md`](DISCLAIMER.md)
+- [English research guidelines](docs/en/research-guidelines.md)
+- [Sources and evidence](docs/en/sources.md)
+- [Provenance and licensing](docs/en/legal/provenance-and-licenses.md)
+- [Disclaimer](DISCLAIMER.md)
 
-## Good contributions
+## Useful contributions
 
-Useful contributions include:
+Examples include:
 
-- repeatable servo or sensor measurements;
-- protocol observations with test conditions;
-- independently created kinematic or dynamic models;
-- simulation validation data;
-- reinforcement-learning experiments with reproducible configuration;
-- corrections backed by public sources or measurements;
-- independently designed hardware and test fixtures;
-- documentation that clearly separates facts, measurements, inference, and assumptions.
+- corrections backed by official sources;
+- reproducible measurements on publicly obtained hardware;
+- public protocol observations with test conditions;
+- independently created diagrams or analyses of public models;
+- simulation/RL validation against upstream behavior;
+- links to relevant public community projects with provenance and status notes;
+- documentation that clearly separates official facts, observation, inference, and assumptions.
 
-## Please do not submit
+## Do not submit
 
-- leaked or confidential information;
-- proprietary CAD, PCB, schematics, firmware, or documentation obtained without authorization;
-- third-party code or assets without compatible licensing and attribution;
-- secrets, keys, credentials, or personal data;
-- claims presented as facts without enough evidence to reproduce or verify them.
+- confidential, leaked, private, or otherwise non-public project information;
+- proprietary CAD, PCB, schematics, firmware, internal documentation, or manufacturing files obtained without authorization;
+- unrelated private engineering work;
+- third-party code/assets without compatible licensing and attribution;
+- secrets, credentials, device keys, personal data, or account information;
+- claims presented as official facts when they are only community inference.
 
-## Research notes
+## Measurement reports
 
-When reporting measurements, include enough context to reproduce the result: hardware revision, firmware/software version, equipment, test conditions, units, sample count, and uncertainty where relevant.
+Where relevant, include hardware revision, firmware/software version, source commit, equipment, conditions, units, sample count, uncertainty, and raw-data location.
 
-Use the evidence labels defined in the research guidelines: **Public source**, **Measured**, **Observed**, **Inferred**, and **Assumed**.
+## Source conflicts
+
+If two public sources disagree, preserve the disagreement and identify which revision/source each claim belongs to. Do not silently rewrite a model-derived value as a production specification.
+
+## Translation contributions
+
+English and Simplified Chinese are currently maintained. Future languages should mirror the same topic hierarchy where practical and must preserve evidence strength: “inferred” must not become “confirmed” during translation.
 
 ## Licensing
 
-A repository-wide license has not yet been selected. Until one is added, contributors should not assume unrestricted reuse rights for repository contents. Third-party components retain their original licenses.
+OpenMicroDuck does not yet have a repository-wide license. Third-party materials retain their own licenses and restrictions. Contributors are responsible for ensuring they have the right to submit their contribution.
