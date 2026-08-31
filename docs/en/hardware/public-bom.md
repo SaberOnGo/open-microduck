@@ -1,87 +1,141 @@
 # Public Hardware Inventory / BOM Status
 
+**English** | [简体中文](../../zh-CN/hardware/public-bom.md)
+
 > Status: public-source reconstruction, last checked 2026-08-31.
 
-Microduck does **not** currently have an official public hardware BOM. Pollen Robotics' press kit explicitly says that the open-source statement covers the software stack and that the mechanical/electronic design files are not published as open-source hardware.
+Microduck does **not** currently have an official public hardware BOM. Pollen Robotics explicitly states that the open-source commitment covers the software stack and that the mechanical/electronic design files are not published as open-source hardware.
 
-This page therefore uses the term **public hardware inventory**, not “official BOM”. Each row states the evidence level.
+This page therefore distinguishes between **official product specifications**, **official-source development hardware**, and **community-derived reconstruction**.
 
 ## Evidence levels
 
-- **Official product spec** — public Pollen Robotics product/press material.
-- **Official source** — identifiable in Pollen Robotics source code, configuration, simulation model, or hardware bring-up notes.
-- **Community reconstruction** — derived by third parties from public assets; useful, but not an official specification.
-- **Provisional** — visible in current development material but not necessarily a final production choice.
+- **Official product spec** — published by Pollen Robotics / Hugging Face on the product page, store, or press kit.
+- **Official source** — directly identifiable in official source code, configuration, simulation assets, or hardware bring-up notes.
+- **Community reconstruction** — independently derived from public assets; useful, but not an official production BOM.
+- **Unresolved** — a subsystem is public, but the exact production part number is not yet fixed or publicly identified.
 
-## Public inventory
+## Concrete component inventory
 
-| Subsystem | Publicly identified component / property | Evidence | Notes |
-|---|---|---|---|
-| Robot size | 25 cm tall, 14 cm wide | Official product spec | Press kit; dimensions described as product specs. |
-| Robot mass | under 800 g | Official product spec | The official RL repo describes the model as ~800 g. Third-party model reconstructions report lower exact model-derived values; those are not treated as production weight. |
-| Compute SoC | Rockchip RK3566 with AI accelerator | Official product spec | 1 GB RAM, 32 GB storage are listed in the press kit. |
-| Current development board | Radxa Zero 3 / Zero 3W | Official source, provisional | Upstream hardware bring-up and deployment docs use Radxa Zero 3/3W. Some design docs explicitly describe the board choice as provisional during development, so the board identity should be distinguished from the final public RK3566 product spec. |
-| Motors | 15 motors | Official product spec | Upstream runtime models 15 joints: 5 left leg + 5 neck/head/mouth + 5 right leg. |
-| Servo family | Dynamixel XL330 | Official source | The RL stack uses a BAM actuator model for Dynamixel XL330; the MJCF includes XL330 geometry. |
-| Policy-controlled joints | 14 | Official source | 5 left leg + 4 neck/head + 5 right leg. The mouth is the 15th motor and is controlled outside the locomotion policy action vector. |
-| Mouth / beak | articulated grasping beak | Official product spec + source | Runtime source includes a separate mouth joint and open/closed travel handling. |
-| Main control IMU | LSM6DSV16X on `imu_to_dxl` v2 | Official source | The control source explicitly decodes this device and reads it on the Dynamixel bus. |
-| Total IMUs | 2, body + head | Official product spec | The exact production chip identity of both IMUs is not fully specified by the public press kit. Do not assume that every development-board IMU seen in source is a final production part. |
-| Range sensor | compact 8×8 ToF matrix | Official product spec | Upstream source includes support for ST VL53L5CX/VL53L8CX families. Exact production model should be treated as unresolved until officially fixed. |
-| Camera | front camera | Official product spec | Resolution/FOV are explicitly described as not final in the press kit. Current hardware bring-up uses a Raspberry Pi Camera v2 / IMX219 path on Radxa Zero 3W. |
-| Audio | microphones + speaker | Official product spec | Current source tree contains TLV320AIC3104 support for the development hardware audio path. |
-| NFC | 2 antennas: head + beak | Official product spec | Intended for tag-triggered interactions. |
-| Connectivity | Wi-Fi + Bluetooth | Official product spec | Upstream runtime includes BLE provisioning/gamepad paths and network/WebRTC components. |
-| Battery | removable NP-F550 camera battery, 2600 mAh | Official product spec | Around one hour runtime depending on use. Upstream control source describes a 2S Li-ion operating span and reads supply voltage through the servo bus. |
-| Rollers | optional passive roller attachments | Official product/accessory info + RL assets | RL repo includes separate roller robot models with passive wheel joints. |
-| Bearings / fasteners | not officially BOM'd | Community reconstruction | Public simulation meshes contain bearing geometry and hole features; independent projects have derived approximate bearing and M2 fastener systems. Treat these as model-derived until verified on production hardware. |
-| Custom PCBs | present in development/reference assets, schematics not public | Official source + community reconstruction | Public source identifies interfaces and device behavior, but no official complete production PCB BOM/schematic is published. |
+| Subsystem | Component / part | Qty. / detail | Evidence | Status / notes |
+|---|---|---:|---|---|
+| Main compute board | **Radxa Zero 3W** | 1 | Official source | Current official bring-up/reference platform. The product-level spec guarantees RK3566, not necessarily this exact carrier forever. |
+| Compute SoC | **Rockchip RK3566** | 1 | Official product spec | AI accelerator included. |
+| RAM | **1 GB** | 1 | Official product spec | Exact DRAM package not public. |
+| Storage | **32 GB** | 1 | Official product spec | Exact flash/eMMC package not public. |
+| Joint actuators | **ROBOTIS Dynamixel XL330** | **15** | Official source + product spec | Exact XL330 sub-variant (for example M077 vs M288) is not explicitly fixed in official Microduck source; do not promote a community guess to official BOM. |
+| Control IMU | **STMicroelectronics LSM6DSV16X** | 1 | Official source | Located on the custom **`imu_to_dxl` v2** board; Dynamixel device ID 200. |
+| IMU bridge board | **`imu_to_dxl` v2** | 1 | Official source | Custom board; complete schematic/BOM not public. |
+| Robot HAT | **Pollen Robotics RPI Robot HAT** | 1 | Official source | Development/reference custom board; full schematic/BOM not public. |
+| HAT audio codec | **Texas Instruments TLV320AIC3104** | 1 | Official source | I2C address **0x18**; I2S audio path; 12 MHz codec MCLK in current development overlay. |
+| HAT secondary IMU | **Bosch BMI088** | 1 | Official source | I2C addresses **0x19 / 0x68** in the development HAT description; explicitly marked dormant/unused in current source comments. |
+| Front camera | **Sony IMX219 / Raspberry Pi Camera v2 path** | 1 | Official source | Current Radxa media bring-up path. Product camera resolution/FOV remain provisional. |
+| ToF sensor | **ST VL53L5CX and/or VL53L8CX family** | 1 | Official source | Both are supported in the official source tree; current public product spec only commits to an 8×8 ToF matrix. Exact production model unresolved. |
+| ToF bus | I2C device at **0x29** | 1 | Official source | Connected through the Robot HAT/Stemma path in current development hardware. |
+| Battery | **NP-F550 camera battery, 2600 mAh** | 1 | Official product spec | Removable; around one hour runtime depending on use. |
+| NFC antennas | Head antenna + beak antenna | **2** | Official product spec | Exact NFC controller/transceiver part number is not public. |
+| Microphones | Not publicly identified | plural | Official product spec | Exact microphone part numbers not public. |
+| Speaker | Not publicly identified | 1 | Official product spec | Exact speaker part number not public. |
+| Wireless | Wi-Fi + Bluetooth | onboard | Official product spec | Current Radxa Zero 3W platform supplies these functions; exact final radio package not separately specified in product documentation. |
+| Camera-use indicator | dedicated REC-style indicator | 1 | Official product spec | Exact LED/device part number not public. |
+| Passive roller attachments | roller assemblies | optional | Official product/accessory info + official RL assets | Passive wheel joints appear in roller MJCF variants. |
 
-## Official motor map in the current runtime
+## Product-level dimensions and mass
 
-The upstream `duck-control/src/model.rs` defines 15 Dynamixel IDs:
+| Item | Public value | Source status |
+|---|---:|---|
+| Height | **25 cm** | Official product spec |
+| Width | **14 cm** | Official product spec |
+| Weight | **under 800 g** in press kit; current store listing says **780 g** | Both are official public values; store value is more specific, while the press kit retains the broader launch spec |
+| Motors / DoF | **15** | Official product spec |
+| Policy loop | **50 Hz** | Official product/official source |
+
+## Motor and device map
+
+The current official runtime defines the following Dynamixel IDs:
 
 ```text
-left leg       20 21 22 23 24
-neck/head/beak 30 31 32 33 34
-right leg      10 11 12 13 14
-IMU board      200 (not a motor)
+left leg        20 21 22 23 24
+neck/head/mouth 30 31 32 33 34
+right leg       10 11 12 13 14
+imu_to_dxl      200
 ```
 
-The same source states that the mouth occupies index 9 and is intentionally omitted from the 14-action policy output.
+The mouth is motor index 9 and is deliberately omitted from the 14-action locomotion policy output. This is why Microduck has **15 motors but a 14-dimensional RL action vector**.
 
-## What is *not* an official BOM
+## Development HAT: publicly identifiable electronics
 
-Several useful details circulating in community projects come from the released MJCF/STL assets, source-code inspection, or inferred wiring. Examples include exact fastener counts, bearing quantities, PCB dimensions, internal bracket geometry, and assembly ordering.
+The official `i2c3-pihat.dts` and `aic3104-i2c3.dts` files expose unusually concrete information about the current development/reference electronics:
 
-These can be valuable engineering observations, but they must remain labeled as **community reconstruction** unless confirmed by Pollen Robotics or by reproducible measurements on production hardware.
+| Item | Publicly visible value |
+|---|---|
+| Compute-board compatibility | `radxa,zero-3w`, `rockchip,rk3566` |
+| HAT I2C controller | RK3566 **I2C3 M0** on header pins 3/5 |
+| I2C clock | **400 kHz** |
+| Audio codec | **TLV320AIC3104**, address **0x18** |
+| Dormant IMU | **BMI088**, addresses **0x19 / 0x68** |
+| ToF | address **0x29**, via Stemma J5 path |
+| Audio MCLK | **12 MHz** fixed clock |
+| I2S CPU-side clock | **12.288 MHz** in the current overlay |
+| Pull-ups mentioned in source comments | **R12/R13, 10 kΩ pair** |
+
+These values describe the current official-source development implementation. They are not a published production schematic.
+
+## What remains unknown
+
+The following are **not** yet public as a complete production BOM:
+
+- exact XL330 sub-variant;
+- MCU/transceiver and passive-component BOM for `imu_to_dxl` v2;
+- complete Robot HAT schematic and PCB BOM;
+- exact production ToF model when both VL53L5CX and VL53L8CX are supported;
+- exact final camera module/lens/FOV;
+- exact head/body second-IMU mapping in the production robot;
+- NFC controller IC;
+- microphone and speaker part numbers;
+- exact production fastener lengths and counts;
+- exact bearing quantities and supplier part numbers;
+- production wiring harnesses/connectors/cable lengths.
+
+Unknown means “not confirmed from public sources”, not “absent from the robot”.
+
+## Community-derived mechanical BOM
+
+Public MJCF/STL assets make it possible to infer more than the official product sheet publishes. Independent reconstruction projects have reported:
+
+- an **M2-dominant fastener system**;
+- model-derived bearing geometries around **22×16×4 mm** and **15×10×3 mm**;
+- model-derived fastener-hole statistics;
+- reconstructed rigid-body grouping, masses, and assembly transforms.
+
+Those details are intentionally kept on a separate page: [Community-derived BOM and assembly reconstruction](community-bom-reconstruction.md).
 
 ## Known source conflicts / moving targets
 
-### Battery geometry versus product battery
+### NP-F550 product battery vs NP-F970-named simulation geometry
 
-Some public simulation assets and community repositories contain an `NP-F970`-named mesh or discuss F970-compatible geometry. The official 2026 press kit specifies a **removable NP-F550, 2600 mAh** battery for the product. This repository therefore treats NP-F550 as the product specification and the F970 references as model/development evidence only.
+Some public simulation assets contain an `NP-F970`-named mesh. The official launch specification and store identify the product battery as **NP-F550, 2600 mAh**. OpenMicroDuck therefore records NP-F550 as the product specification and treats F970 references as model/development evidence.
 
-### Exact camera and ToF part numbers
+### Camera and ToF
 
-The product press kit intentionally leaves camera resolution/FOV and LiDAR range provisional. The current source tree contains concrete drivers and hardware bring-up for IMX219 and ST multi-zone ToF devices, but those development choices should not automatically be promoted to immutable production BOM entries.
+The press kit states that camera resolution/FOV and LiDAR range are still being finalized. The source tree is more concrete about development hardware (IMX219, VL53L5CX/VL53L8CX), but development-source specificity is not the same as a frozen production BOM.
 
-### Exact modeled mass
-
-The official product statement is “under 800 g” and the RL repository says ~800 g. Third-party transforms of the public MJCF report a more precise model mass. Precision from a simulation asset is not the same thing as a production scale measurement.
-
-## Primary sources
+## Primary official sources
 
 - https://pollen-robotics.com/microduck/press-kit/
 - https://pollen-robotics.com/microduck/
+- https://store.pollen-robotics.com/products/microduck
 - https://github.com/pollen-robotics/microduck
 - https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/model.rs
 - https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/imu.rs
+- https://github.com/pollen-robotics/microduck/blob/main/deploy/audio/i2c3-pihat.dts
+- https://github.com/pollen-robotics/microduck/blob/main/deploy/audio/aic3104-i2c3.dts
+- https://github.com/pollen-robotics/microduck/blob/main/docs/project/media-bringup.md
 - https://github.com/pollen-robotics/microduck_rl
 
-## Community reconstruction references
+## Community references
 
 - https://github.com/fanhao375/microduck-replica
 - https://github.com/boris721/microduck-3d
 
-See [../ecosystem/reverse-engineering-projects.md](../ecosystem/reverse-engineering-projects.md) for a broader project index and provenance notes.
+See [../ecosystem/reverse-engineering-projects.md](../ecosystem/reverse-engineering-projects.md) for the reviewed community-project index.
