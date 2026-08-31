@@ -16,7 +16,8 @@ This documentation tree collects public, attributable information about Microduc
 
 ## Research ecosystem
 
-- [Reverse-engineering and community projects](ecosystem/reverse-engineering-projects.md)
+- [Reverse-engineering and reviewed community projects](ecosystem/reverse-engineering-projects.md)
+- [Broader GitHub repository discovery snapshot](ecosystem/discovered-repositories.md)
 - [Sources and evidence map](sources.md)
 - [Research guidelines](research-guidelines.md)
 - [Provenance and licensing](legal/provenance-and-licenses.md)
