@@ -1,158 +1,148 @@
-# Control Loop and Sensor Dataflow
+# Control Loop: How the Robot Moves
 
 **English** | [简体中文](../../zh-CN/software/control-loop-and-sensor-dataflow.md)
 
-> Primary source: official Microduck runtime and RL repositories.
+> This page explains the low-level movement loop in plain language. It is based on the public Microduck runtime and RL repositories.
 
-This page explains, in plain language, how data moves through the low-level control system: from servos and IMU, into the policy, and back to motor commands.
+## The whole loop
 
-The key idea is that the physical robot executes a **closed loop at 50 Hz**. Every 20 ms, the runtime reads state, builds the policy input, runs the neural network, processes the output, and sends new joint targets.
-
-## The short version
+Microduck updates its movement **50 times per second**:
 
 ```text
-14 controlled servos + control IMU
-              │
-              ▼
-       synchronized state read
-              │
-              ▼
-   joint position / velocity
-   body orientation / angular data
-              │
-              ▼
-      observation builder
-           61 values
-              │
-              ▼
-          ONNX policy
-          14 actions
-              │
-              ▼
- scale / filter / limits / safety
-              │
-              ▼
-       servo target write
-              │
-              └────── repeats at 50 Hz
+read joints + IMU
+       ↓
+build 61 input values
+       ↓
+run the selected movement AI
+       ↓
+get 14 joint actions
+       ↓
+apply scale / filter / safety / limits
+       ↓
+send new targets to the servos
+       ↓
+repeat after 20 ms
 ```
 
-Microduck has 15 motors in total, but the articulated beak/mouth motor is outside the 14-action locomotion policy and is handled separately.
+That is the core low-level control path.
 
-## What happens during one control tick
+## Why 15 motors but only 14 AI actions?
 
-A simplified control tick is:
+The current runtime has **15 physical motor IDs**.
 
-1. **Read the robot state.** The runtime obtains joint state and IMU-related data through the motor/control bus.
-2. **Build the observation.** The runtime converts raw robot state into the 61-value interface expected by the policy.
-3. **Run the ONNX network.** The selected policy produces 14 action values.
-4. **Post-process the actions.** Runtime-side scaling, filters, limits, gains, safety logic, and other actuator-facing rules are applied.
-5. **Write new joint targets.** Commands are sent back to the controlled servos.
-6. **Repeat at 50 Hz.**
+The locomotion policies control **14 joints**. The mouth/beak motor is controlled separately, so it is not part of the 14-action policy output.
 
-The neural network is therefore only one part of the controller. The deployed behavior is better described as:
+## What are the 61 input values?
+
+They are mostly information about the robot's own body:
+
+| Input group | Count | Plain meaning |
+|---|---:|---|
+| Body angular velocity | 3 | how the body is rotating |
+| Gravity direction | 3 | which way the body is tilted |
+| Joint positions | 14 | where the joints are |
+| Joint velocities | 14 | how fast the joints are moving |
+| Previous actions | 14 | what the policy commanded last time |
+| Movement command | 13 | requested walking, head and body pose |
+| **Total** | **61** | |
+
+The 13 command values are:
 
 ```text
-policy + observation construction + filters + actuator rules + safety + hardware
+walk / turn command    3
+head target            4
+body-pose target       6
 ```
 
-## Motor and IMU path
+## Camera and ToF are not in these 61 values
 
-The current official runtime exposes a Dynamixel-style bus containing the servo devices and an `imu_to_dxl` device used for the control IMU.
+This is an important architectural boundary.
 
-Public source identifies:
+The standard locomotion policy does **not** directly receive:
 
-- 15 motor IDs;
-- `imu_to_dxl` device ID **200**;
-- current development serial rate **1 Mbps**;
-- the beak motor as separate from the 14-action locomotion vector.
+- camera images;
+- raw 8×8 ToF depth frames.
 
-Reading servo state and control-IMU data through the same control path helps keep joint and orientation data aligned in time.
-
-## What is inside the 61-D observation
-
-The official RL project defines the shared actor observation as:
+Instead:
 
 ```text
-base angular velocity      3
-projected gravity          3
-joint position            14
-joint velocity            14
-previous actions          14
-----------------------------
-proprioception            48
-
-twist command              3
-head-pose command           4
-body-pose command           6
-----------------------------
-command block              13
-
-total                     61
+Camera / ToF
+     ↓
+perception and behavior logic
+     ↓
+movement command
+     ↓
+61-D locomotion policy
 ```
 
-This is primarily **proprioception**: information about the robot's own body and the command it is currently trying to follow.
+So the movement AI focuses on **how to move the body**, while other software decides **where or why to move**.
 
-## Does the walking policy directly use the camera or ToF image?
+## What happens after the AI model?
 
-Based on the currently published 61-D actor contract, **the standard low-level locomotion policy does not take a camera image or 8×8 ToF frame as part of those 61 values**.
+The neural network does not write directly to motors.
 
-That does not mean the camera or ToF sensor is unimportant. They can serve other parts of the robot stack, such as perception, remote operation, application logic, object-related behavior, or future policies.
+The runtime still applies ordinary control code such as:
 
-The important distinction is:
+- action scaling;
+- optional low-pass filtering;
+- joint travel limits;
+- servo gains;
+- fall / limp / recovery handling;
+- deadman/watchdog behavior;
+- bus-error handling.
+
+A useful way to think about the deployed controller is:
 
 ```text
-low-level locomotion policy
-    mainly body state + commands
-
-camera / ToF services
-    environmental perception for other software paths
+movement policy
++ runtime control rules
++ safety
++ real hardware
 ```
 
-Do not assume that every onboard sensor is automatically an input to every neural policy.
+The ONNX file alone is not the complete controller.
 
-## Why “previous actions” are part of the input
+## Motor and IMU data path
 
-The 61-D contract includes the previous 14 actions. This gives the policy information about what it commanded on the previous control step.
+The current public development path uses a Dynamixel-compatible serial bus:
 
-For a fast physical controller, this helps the network reason about short-term command history without needing an image stream or a long external history buffer.
+```text
+15 servos + IMU bridge ID 200
+            │
+            ▼
+        1 Mbps UART
+            │
+            ▼
+          robotd
+```
 
-## Runtime-side filtering matters
+The main control IMU and servo state are read through the same control path, helping the runtime use joint and body-orientation data from closely aligned samples.
 
-The official runtime includes actuator-facing processing such as action scaling, low-pass filtering for selected joints, position gains, joint travel handling, fall/limp/recovery state, watchdog behavior, and bus-error handling.
+For exact IDs, register details and sensor formats, see [Hardware Parameter Reference](../hardware/parameter-reference.md) and [Electronics, Buses, Sensors, and Power](../hardware/electronics-and-buses.md).
 
-These details matter for sim-to-real because a policy trained with one action path can behave differently if deployment silently adds or removes filters.
+## Why previous actions are included
 
-A useful rule is: **the ONNX file alone is not the whole controller**.
+The policy sees its previous 14 outputs. This gives it a short memory of what it just asked the body to do without needing a camera stream or a separate recurrent network.
 
-## Where camera and ToF live in the software architecture
+## The main idea to remember
 
-The official runtime separates major hardware responsibilities into services. In the current source tree:
+```text
+High-level software says: “move this way.”
+Locomotion AI says:       “move the joints like this.”
+Safety/runtime says:      “only commands that are safe and valid reach the motors.”
+```
 
-- `mediad` handles the camera/media path;
-- `tofd` owns the multi-zone ToF sensor;
-- `robotd` owns the real-time robot control loop and policy execution.
-
-This service separation avoids letting every application talk directly to low-level hardware.
-
-## Timing and failures
-
-A 50 Hz loop means the target period is about **20 ms**. The runtime also tracks whether the loop is actually achieving its expected rate and whether bus transactions are failing.
-
-This matters because “Linux is still running” is not enough for a walking robot. A control daemon that is alive but missing motor deadlines can still be unsafe or unusable.
-
-## Primary official sources
+## Primary public sources
 
 - https://github.com/pollen-robotics/microduck
 - https://github.com/pollen-robotics/microduck/blob/main/docs/design/robotd-design.md
 - https://github.com/pollen-robotics/microduck/blob/main/deploy/robotd.toml
+- https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/obs.rs
 - https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/model.rs
-- https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/imu.rs
-- https://github.com/pollen-robotics/microduck_rl/blob/develop/README.md
+- https://github.com/pollen-robotics/microduck_rl
 
 ## Related pages
 
-- [Onboard runtime architecture](runtime-architecture.md)
-- [Policy catalog and switching](../simulation/policy-catalog-and-switching.md)
-- [Simulation and reinforcement learning](../simulation/model-and-rl.md)
-- [Electronics, buses, sensors, and power](../hardware/electronics-and-buses.md)
+- [How the Microduck software fits together](runtime-architecture.md)
+- [Policy catalog and runtime switching](../simulation/policy-catalog-and-switching.md)
+- [Sim-to-real parameter reference](../simulation/sim-to-real-parameter-reference.md)

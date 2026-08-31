@@ -1,151 +1,186 @@
-# Onboard Runtime Architecture
+# How the Microduck Software Fits Together
 
-> This page summarizes the architecture exposed by the official `pollen-robotics/microduck` software repository. It documents the public software stack, not unpublished electronics.
+**English** | [简体中文](../../zh-CN/software/runtime-architecture.md)
 
-## Overview
+> Scope: public information from the official `pollen-robotics/microduck` repository. This page explains the system first and names implementation details second.
 
-The official Microduck repository describes the onboard system as a Rust workspace running a small set of cooperating Linux daemons on an RK3566-class computer.
+## The whole software system in one picture
+
+Microduck does not use one giant AI model for everything. The software is split into layers:
 
 ```text
-                   clients
-        app / gamepad / CLI / scripts
-                     │
-             shared JSON-RPC API
-                     │
-     ┌───────────────┼─────────────────┐
-     │               │                 │
-   robotd          configd           updaterd
- control/motors   Wi-Fi/identity    signed updates
-     │
-     ├──────── padd     gamepad input
-     ├──────── btd      Bluetooth path
-     ├──────── mediad   camera/WebRTC
-     └──────── tofd     depth/ToF service
+Camera ──► vision AI ──────────────┐
+                                   │
+ToF ────► distance / obstacle code ├──► high-level behavior
+                                   │      “walk there”
+Sound / BLE / other inputs ────────┘      “look left”
+                                          “kick”
+                                              │
+                                              ▼
+                                     locomotion RL policy
+                                      body state + command
+                                              │
+                                              ▼
+                                     14 joint targets
+                                              │
+                                              ▼
+                                   safety / limits / filters
+                                              │
+                                              ▼
+                                          15 motors
 ```
 
-The daemons communicate locally through **JSON-RPC over Unix sockets**. The architecture deliberately keeps the transport separate from the owning service: Bluetooth, local CLI tools, and other clients can route the same API calls rather than implementing different robot-control protocols.
+The important separation is:
 
-## Main services
+- **Perception** finds things around the robot.
+- **High-level behavior** decides what the robot should try to do.
+- **Locomotion AI** decides how the body should move to follow that command.
+- **Safety and motor code** turn the result into physical servo commands.
 
-| Service | Public role |
+## Which parts use AI?
+
+| Part | Main method in the current public stack |
 |---|---|
-| `robotd` | Owns the 50 Hz control loop, motor bus, policy execution, robot state, skills, and safety/control decisions. |
-| `updaterd` | Installs signed software releases and supports health-gated rollback. |
-| `configd` | Owns Wi-Fi/network configuration, identity, and system configuration functions. |
-| `btd` | Bluetooth transport used by phone/client provisioning paths; routes calls to the owning services. |
-| `padd` | Reads the game controller and converts input into the common robot API. |
-| `mediad` | Captures/encodes/streams camera media, including the current WebRTC path. |
-| `tofd` | Owns the multi-zone ToF sensor and exposes depth frames/status. |
+| Camera object detection | AI model (`duck_detect.onnx` / `duck_detect.rknn`) |
+| ToF depth processing | Normal geometry and filtering code |
+| High-level autonomous behavior | Mainly state-machine / rule logic in the older runtime; not yet fully ported to the new daemon architecture |
+| Walking, standing and movement skills | Reinforcement-learning policies exported to ONNX |
+| Safety, limits, bus I/O, updates, networking | Normal software |
 
-The exact service set can evolve; the official repository is the authoritative source for current binaries and APIs.
+So “AI robot” does not mean every sensor is fed directly into one neural network.
 
-## Control loop
+## What are the strangely named programs?
 
-The current configuration uses a **50 Hz** control loop.
+The official software is mostly Rust. It runs several small background programs on Linux. A background program that stays running is often called a **daemon**.
 
-The official repository describes this loop as driving fifteen servo devices while neural policies output fourteen controlled joint commands. The mouth/beak motor is controlled separately.
+The names are easier to remember by their jobs:
 
-Current alpha policies are validated at load time against a shared interface:
+| Code name | Plain-language job |
+|---|---|
+| `robotd` | **Body controller.** Runs the 50 Hz movement loop, movement policies and safety logic. |
+| `mediad` | **Camera and remote video.** Captures camera frames, runs the current vision detector and streams video. |
+| `tofd` | **Depth sensor.** Reads the 8×8 ToF sensor and publishes depth frames. |
+| `padd` | **Gamepad reader.** Turns stick/button input into robot commands. |
+| `btd` | **Bluetooth bridge.** Carries supported commands over Bluetooth. |
+| `configd` | **Settings.** Handles Wi-Fi, identity and system configuration. |
+| `updaterd` | **Software updater.** Installs signed releases and can roll back a bad update. |
+| `robotctl` | **Developer/operator tool.** A command-line way to inspect and control the robot. |
+
+The split is useful because one failure does not need to stop everything. For example, a camera problem should not kill the motor-control loop.
+
+## How movement works
+
+The low-level movement loop runs at **50 Hz**, once every **20 ms**:
 
 ```text
-observation: 61 floats
-policy output: 14 actions
-control rate: 50 Hz
+read joints + IMU
+       ↓
+build 61-number observation
+       ↓
+run selected ONNX movement policy
+       ↓
+14 actions
+       ↓
+scale / filter / safety / limits
+       ↓
+write new servo targets
+       ↓
+repeat
 ```
 
-The runtime can switch among policies/skills while keeping the same observation/action contract. This is why walking, recovery, sit/stand, kicking, rolling, ground-pick, and roller behaviors can share the onboard control infrastructure rather than requiring a different firmware image for every behavior.
+There are **15 physical motor IDs** in the current runtime. The locomotion policy controls **14 joints**; the mouth/beak motor is handled separately.
 
-## 61-dimensional observation contract
+The 61-number movement input is mainly the robot's own body state plus a command. Camera images and the raw 8×8 ToF frame are **not** part of this standard 61-D locomotion input.
 
-The official RL repository describes the current actor observation as:
+See [Control loop and sensor dataflow](control-loop-and-sensor-dataflow.md) for the exact 61-D layout.
+
+## Where Camera and ToF fit
+
+### Camera
+
+The current public path is roughly:
 
 ```text
-48 proprioception
-+ 13 command values
-= 61 total
+camera
+  ↓
+mediad
+  ├──► video / WebRTC
+  └──► duck-detect
+          ↓
+      detected object positions
 ```
 
-The command block is shared across the policy family:
+The detector can use the RK3566 NPU through an RKNN model or use the CPU with an ONNX model.
 
-- twist: 3 values;
-- head pose: 4 values;
-- body pose: 6 values.
+### ToF
 
-Tasks that do not use a command field zero-pad it instead of changing the network input width. That invariant enables runtime policy hot-swapping.
+The current public path is roughly:
 
-## ONNX deployment
+```text
+8×8 ToF
+   ↓
+ tofd
+   ↓
+64 distance values
+   ↓
+kinematics + geometry code
+   ↓
+floor / empty space / obstacle points
+```
 
-Policies are trained in the separate `microduck_rl` project and exported to **ONNX**. The onboard runtime loads the exported networks through ONNX Runtime.
+This processing is ordinary geometry/filtering code rather than a neural network.
 
-Upstream documentation emphasizes that observation normalization is baked into the exported graph; a manually converted checkpoint without the expected normalizer is not equivalent to the deployment artifact.
+## What decides the robot's behavior?
 
-## Motor/IMU I/O
+This is the layer between perception and the movement policies:
 
-`robotd` reaches the current development motor bus through `duck-control` and the upstream Dynamixel-compatible Rust stack.
+```text
+“I see something ahead”
+        ↓
+behavior logic
+        ↓
+“turn left and walk slowly”
+        ↓
+locomotion policy
+```
 
-The public control sources expose:
+The older Microduck runtime had an autonomous behavior system built mainly as a state machine with rules, mood/energy state, exploration memory, ToF avoidance and behaviors such as wandering, looking around, playing and sleeping.
 
-- 15 motor IDs;
-- one IMU bridge at ID 200;
-- 1 Mbps serial configuration;
-- current development port `/dev/ttyS2` on Radxa Zero 3W;
-- position/velocity/voltage/status data used by the control loop.
+The official new daemon-based software has not yet fully ported that complete autonomous brain. The current official roadmap lists it as a remaining major area of work. This is a **software migration gap**, not evidence that Camera or ToF support is closed-source.
 
-The control IMU is read on the same transaction family as the servo state, reducing synchronization ambiguity between joint and orientation data.
+## How the programs talk to each other
 
-## Policy filtering and actuator-facing control
+Most local control/status traffic uses **JSON-RPC over Unix sockets**. In simple terms:
 
-The runtime does more than call a neural network. Public configuration/source includes actuator-facing behavior such as:
+> one background program sends a small structured message to another background program on the same Linux computer.
 
-- action scaling;
-- head and leg low-pass filtering;
-- position gains;
-- battery-voltage-aware options;
-- joint travel handling;
-- fall/limp/recovery logic;
-- dropped-bus-transaction handling;
-- watchdog/deadman behavior.
+This lets the gamepad, Bluetooth path, command-line tools and other clients reuse the same robot commands instead of each inventing a separate motor-control protocol.
 
-These details are important to sim-to-real reproducibility because the physical robot executes **policy + runtime control path**, not the ONNX network in isolation.
+## Why this architecture is useful for reproduction
 
-## Safety and health
+A compatible research build does not need to rewrite every layer at once. The public software already separates useful boundaries:
 
-The official runtime separates robot state from release health. A robot can report battery, motor temperature, loop statistics, and bus counters, while the updater uses a narrower health gate to decide whether a software release should be rolled back.
+```text
+sensor input
+   ↓
+perception
+   ↓
+behavior command
+   ↓
+movement policy
+   ↓
+motor interface
+```
 
-Public configuration includes thresholds for achieved control frequency, stalled loops, and consecutive bus errors. The update design therefore treats “process is running” and “robot control is operating correctly” as different conditions.
+If hardware changes, the hardware-facing layer can change while the higher-level logic stays similar. If behavior requirements change, the behavior layer can change without retraining every walking policy.
 
-## Input and remote-control paths
-
-The architecture is intentionally multi-client:
-
-- game controller through `padd`;
-- local administration through `robotctl` and Unix sockets;
-- Bluetooth provisioning/control path through `btd`;
-- application/network functions through the same service contracts.
-
-This design keeps robot commands transport-independent: transports carry requests; the service owning the capability remains responsible for the behavior.
-
-## Camera and depth services
-
-### `mediad`
-
-Current official hardware bring-up uses the RK3566/Rockchip media stack and hardware H.264 encoding through Rockchip MPP, with WebRTC integration in the software architecture.
-
-### `tofd`
-
-The ToF service owns multi-zone depth acquisition and makes the result available to other components instead of letting every client talk directly to the sensor.
-
-## Updates
-
-`updaterd` is designed around signed releases, installation, post-install validation, and rollback. This is particularly relevant on a walking robot: a software update that leaves Linux alive but degrades the real-time control loop must not be considered healthy merely because the daemon answers a socket.
-
-## Primary sources
+## Primary public sources
 
 - https://github.com/pollen-robotics/microduck
-- https://github.com/pollen-robotics/microduck/blob/main/README.md
-- https://github.com/pollen-robotics/microduck/tree/main/docs/design
-- https://github.com/pollen-robotics/microduck/blob/main/deploy/robotd.toml
-- https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/model.rs
+- https://github.com/pollen-robotics/microduck/blob/main/docs/design/architecture.md
+- https://github.com/pollen-robotics/microduck/blob/main/docs/project/roadmap.md
+- https://github.com/pollen-robotics/microduck/tree/main/mediad
+- https://github.com/pollen-robotics/microduck/tree/main/tof
+- https://github.com/pollen-robotics/microduck/tree/main/duck-detect
+- https://github.com/pollen-robotics/microduck/tree/main/kinematics
 - https://github.com/pollen-robotics/microduck_rl
-
-For the public hardware side of this architecture, see [../hardware/electronics-and-buses.md](../hardware/electronics-and-buses.md).
