@@ -1,154 +1,194 @@
 # 电控、总线、传感器与电源
 
-> 范围：Pollen Robotics 官方产品资料和公开源码中能够验证的信息。开发板/开发阶段实现与最终产品规格分开标注。
+[English](../../en/hardware/electronics-and-buses.md) | **简体中文**
 
-## 系统概览
+> 范围：Pollen Robotics 官方产品资料与官方源码中能够验证的信息。开发/参考硬件与最终量产产品规格分开标注。
 
-公开资料显示，Microduck 是一套以 **RK3566** Linux 计算平台为核心的小型机器人系统，主要由 Dynamixel 电机总线、挂在同一总线上的 IMU bridge、摄像头、ToF、音频、Wi-Fi/Bluetooth 和可拆卸摄像机电池组成。
+## 明确电子器件速查
 
-根据公开来源可抽象为：
+| 功能 | 已公开器件 | 接口 / 地址 | 证据状态 |
+|---|---|---|---|
+| Linux 主控板 | **Radxa Zero 3W** | 40-pin、CSI、Wi-Fi/Bluetooth | 官方源码中的开发/参考平台 |
+| SoC | **Rockchip RK3566** | — | 官方产品规格 |
+| 舵机总线 | **15 × ROBOTIS Dynamixel XL330** | UART2 `/dev/ttyS2`、Dynamixel Protocol 2、**1 Mbps** | 官方源码 |
+| 主控制 IMU | **ST LSM6DSV16X** | `imu_to_dxl` v2、Dynamixel ID **200** | 官方源码 |
+| 音频 Codec | **TI TLV320AIC3104** | I2C **0x18**、I2S | 官方源码中的开发硬件 |
+| HAT IMU | **Bosch BMI088** | I2C **0x19 / 0x68** | 官方源码中的开发硬件；当前标注 dormant/unused |
+| 前置摄像头 | **Sony IMX219 / Raspberry Pi Camera v2 路径** | MIPI CSI | 官方源码中的开发硬件 |
+| ToF | **ST VL53L5CX / VL53L8CX** | I2C **0x29** | 官方源码同时支持；量产具体型号未确认 |
+| 产品电池 | **NP-F550，2600 mAh** | 可拆卸摄像机电池 | 官方产品规格 |
+| NFC | 两个天线 | 头部 + 喙部 | 官方产品规格；控制 IC 未公开 |
+
+## 根据公开源码整理的系统图
 
 ```text
-                 RK3566 Linux 主控
-                        │
-          ┌─────────────┼──────────────┐
-          │             │              │
-   串口 / DXL         摄像头         I2C / 音频
-          │             │              │
-   ┌──────┴──────┐    CSI 路径     ToF / Codec
-   │             │
-15 个舵机   imu_to_dxl v2
-                 │
-           LSM6DSV16X
+                         Radxa Zero 3W
+                      Rockchip RK3566 Linux
+                              │
+        ┌─────────────────────┼────────────────────┐
+        │                     │                    │
+ UART2 / ttyS2             MIPI CSI              I2C3 M0
+ Dynamixel V2              IMX219 路径          400 kHz
+ 1 Mbps                       │                    │
+        │                     │          ┌─────────┼──────────┐
+        │                     │          │         │          │
+        │                     │   TLV320AIC3104  BMI088    ToF 0x29
+        │                     │      0x18       0x19/0x68  VL53L5/8CX
+        │
+   ┌────┴────────────────────────────┐
+   │                                 │
+15 × Dynamixel XL330          imu_to_dxl v2
+                                     │
+                               LSM6DSV16X
+                               device ID 200
 ```
 
-这是一张根据公开资料整理的说明图，**不是官方原理图**。
+这是一张根据公开源码整理的说明图，**不是官方原理图**。
 
-## 计算平台
+## 主控平台
 
 ### 产品级规格
 
-官方 Press Kit 列出：
+Pollen Robotics 已公开：
 
-- Rockchip **RK3566**，带 AI 加速器；
+- **Rockchip RK3566**，带 AI 加速器；
 - **1 GB RAM**；
 - **32 GB 存储**；
-- Wi-Fi 与 Bluetooth。
+- Wi-Fi + Bluetooth。
 
-### 当前官方源码中的开发平台
+### 当前官方源码中的开发板
 
-官方 bring-up 和部署文档当前使用 **Radxa Zero 3 / Zero 3W** 与 Armbian/Debian 系软件。由于早期设计资料曾把开发板选择标为 provisional，OpenMicroDuck 将它记录为当前官方源码可验证的开发/参考平台，而不是擅自写成永久不变的量产 BOM。
+当前 bring-up、媒体、设备树和部署文件都指向 **Radxa Zero 3W**。官方 overlay 中可直接看到兼容字符串：
 
-## 电机与传感器主总线
+```text
+radxa,zero-3w
+rockchip,rk3566
+```
+
+因此 OpenMicroDuck 把 Radxa Zero 3W 记录为**当前官方源码可验证的开发/参考板**，而产品级不变规格只写 RK3566。
+
+## 舵机 / IMU 共用总线
 
 当前官方运行时定义：
 
-- Radxa Zero 3W 开发接线上的串口：`/dev/ttyS2`；
-- 总线速率：**1,000,000 baud**；
-- Dynamixel Protocol 2 兼容通信；
-- 15 个电机 ID；
-- 一个 ID 为 **200** 的 `imu_to_dxl` 设备；
-- 名义控制频率：**50 Hz**。
+- 端口：**`/dev/ttyS2`**；
+- 波特率：**1,000,000**；
+- 协议：Dynamixel Protocol 2 兼容；
+- 名义控制频率：**50 Hz**；
+- 15 个舵机 ID + `imu_to_dxl` ID 200。
 
-官方 `robotd.toml` 的注释明确说明，15 个舵机与 `imu_to_dxl` 板共享这条串口总线。
-
-### 电机 ID
+### 设备 ID
 
 ```text
-左腿          20 21 22 23 24
-颈/头/嘴      30 31 32 33 34
-右腿          10 11 12 13 14
-IMU bridge     200
+左腿           20 21 22 23 24
+颈/头/嘴       30 31 32 33 34
+右腿           10 11 12 13 14
+imu_to_dxl      200
 ```
 
-ID 映射来自官方 `duck-control/src/model.rs`。
+15 个舵机与 IMU bridge 共用同一条总线。嘴部电机不进入 14 维 locomotion policy action。
 
-## 为什么是 15 个电机，但 RL 只有 14 个动作
+## `imu_to_dxl` v2
 
-官方运行时建模了 15 个 joint，而当前 alpha 策略接口为 **61 维 observation → 14 维 action**。
+官方 `duck-control/src/imu.rs` 明确写出传感器为 **ST LSM6DSV16X**。
 
-少掉的 action 是有意设计：嘴/喙电机不进入运动策略 action vector。运行时会绕过 mouth slot 映射 14 个策略输出，并独立控制嘴部。
+控制环读取 12 字节数据：
 
-## IMU bridge
+- gyro x/y/z：`i16` little-endian；
+- SFLP quaternion x/y/z：IEEE binary16；
+- quaternion `w` 由主机恢复。
 
-官方 `duck-control/src/imu.rs` 明确描述了使用 **ST LSM6DSV16X** 的 **`imu_to_dxl` v2**。
+源码还说明，IMU 数据与舵机状态走同一共享总线读取路径。
 
-控制环每次读取一个 12 字节数据块：
+目前**没有公开** `imu_to_dxl` v2 的完整原理图/BOM，所以 MCU、总线收发电路、稳压器和被动器件不能擅自补成“已知料号”。
 
-- gyro x/y/z：有符号 16 位；
-- SFLP quaternion x/y/z：IEEE half precision；
-- `w` 由主机根据单位四元数约束恢复。
+## Pollen Robotics RPI Robot HAT
 
-官方源码说明，这个 IMU 数据块与舵机状态在同一总线读取周期内获取，因此主控制 IMU 不需要另开一条主机侧轮询通道。
+官方源码明确称当前 Radxa 开发路径上的定制板为 **Pollen Robotics RPI Robot HAT**。
 
-官方产品规格另行说明整机拥有**两个 IMU：机身一个、头部一个**。公开源码已经明确识别主控制路径上的 LSM6DSV16X，但在 Pollen Robotics 正式确认之前，OpenMicroDuck 不把开发阶段看到的其它 IMU 器件自动写成最终量产头部 IMU 型号。
+### 当前源码已经明确的 HAT 器件
 
-## 舵机系列
+| 器件 / 参数 | 公开值 |
+|---|---|
+| 音频 Codec | **TI TLV320AIC3104**，I2C **0x18** |
+| 第二颗 IMU | **Bosch BMI088**，**0x19 / 0x68**，当前标注 dormant/unused |
+| ToF 路径 | **0x29**，经 Stemma J5 |
+| I2C 总线 | RK3566 **I2C3 M0**，header pin 3/5 |
+| I2C 频率 | **400 kHz** |
+| Codec MCLK | **12 MHz** 固定时钟 |
+| 当前 overlay 的 CPU 侧 I2S 时钟 | **12.288 MHz** |
+| 官方源码注释明确提到的 I2C 上拉 | **R12/R13，一对 10 kΩ** |
 
-官方 RL 仓库用 Rhoban BAM 模型对 **Dynamixel XL330** 建模，公开 MJCF 资产中也包含 XL330 几何。
+### I2C3 复用细节
 
-官方仿真/运行时公开的重要执行器特性包括：
+官方 `i2c3-pihat.dts` 说明，HAT 使用 RK3566 I2C3 的 M0 pinmux。Radxa 原本在 M1 位置用同一个控制器连接 **FUSB302** USB-C PD 控制器；官方 overlay 会把 I2C3 重新复用到 HAT 的 pin 3/5，并在该模式下禁用 FUSB302 设备树节点。
 
-- 电压相关的执行器响应；
-- BAM 中的反电动势与摩擦建模；
-- command delay 随机化；
-- 电池电压与负载压降随机化；
-- 专门的齿隙/backlash 模型变体。
-
-详见 [仿真与强化学习](../simulation/model-and-rl.md)。
-
-## 电池与电源观测
-
-官方产品规格列出：**可拆卸 NP-F550、2600 mAh 摄像机电池**，根据使用方式续航约 1 小时。
-
-当前官方控制源码把电池描述为 2S Li-ion，并使用大致如下的机器人工作区间：
-
-- **8.2 V**：带载满电附近；
-- **6.6 V**：机器人工作意义上的低电阈值。
-
-运行时源码同时说明其控制模型没有独立 fuel gauge / ADC 值，而是使用舵机总线报告的供电电压。因此这些数字代表**带载总线可用电压**，不是实验室意义上的电芯 SOC 曲线。
+这属于开发平台细节，但它让公开接线比“只有产品规格表”具体得多。
 
 ## 摄像头
 
-Press Kit 确认前置摄像头，但明确表示最终分辨率和 FOV 尚在确定。
+官方媒体 bring-up 使用 **Raspberry Pi Camera v2 / Sony IMX219** 路径，并在 Radxa Zero 3W 上通过 Rockchip MPP 做硬件 H.264 编码。
 
-官方 Radxa Zero 3W 的媒体 bring-up 文档当前使用 **Raspberry Pi Camera v2 / IMX219** 的设备树路径，并通过 Rockchip MPP 做硬件 H.264 编码。这是当前开发平台的强证据，但在官方冻结最终摄像头规格之前，不应把它无条件升级成永久量产 BOM。
+同时 Press Kit 又明确说最终 camera resolution / FOV 仍在确定。因此应区分：
 
-## ToF / “LiDAR”
+- **当前官方开发路径确认 IMX219**；
+- **最终量产摄像头模组和镜头尚不能写死**。
 
-Press Kit 将测距器描述为**紧凑型 8×8 time-of-flight matrix**。
+## ToF
 
-官方源码 vendor/driver 中同时存在：
+官方产品规格确认**8×8 time-of-flight matrix**。
 
-- ST **VL53L5CX**；
-- ST **VL53L8CX**。
+官方源码同时 vendor/support：
 
-由于两代器件都存在于源码、Press Kit 又没有指定最终料号，本项目将最终量产具体型号保留为“未确定”，而不是依据第三方推测二选一。
+- **ST VL53L5CX**；
+- **ST VL53L8CX**。
+
+当前 HAT 接线把 ToF 设备放在 **I2C 地址 0x29**。因为两代器件都存在于官方源码，所以不能在没有更强证据时擅自挑一个写成最终量产 BOM。
 
 ## 音频
 
-Press Kit 确认麦克风与扬声器。
+当前开发音频路径已经非常明确：
 
-当前官方源码的 Radxa 开发路径中包含 **TI TLV320AIC3104** codec 的 bring-up 与设备树支持。因此本文把它记录为“当前官方源码证据”，而不是声称所有量产 revision 永远使用同一套音频板实现。
+```text
+RK3566 I2C3 ──> TLV320AIC3104 @ 0x18   控制
+RK3566 I2S3 ──> TLV320AIC3104          音频数据
+12 MHz fixed clock ──> codec MCLK
+```
 
-## NFC
+产品规格另外确认 microphones + speaker，但具体麦克风和扬声器料号目前没有公开。
 
-官方产品规格列出**两个 NFC 天线**：头部一个、喙部一个。公开产品资料中 NFC tag 被用于触发交互与附件玩法。
+## 电池与电压观测
 
-## 总线可靠性也是架构的一部分
+官方产品资料明确写 **NP-F550、2600 mAh** 可拆卸电池。
 
-官方运行时并不假定每次串口事务都成功，而是对孤立总线错误做容错，并设置连续读取失败阈值。官方项目文档也记录了真机上的总线测量。
+当前官方运行时通过舵机报告的总线电压工作，定义的带载可用区间大致为：
 
-因此理解 50 Hz 控制系统不能只看“1 Mbps”这个标称值；设备数量、返回延迟、错误处理、调度和实际 loop timing 都属于系统行为的一部分。
+- **8.2 V**：满电附近；
+- **6.6 V**：机器人工作意义上的空电阈值。
+
+源码注释同时说明，这个控制模型没有使用独立 fuel-gauge / ADC 数值来生成该电量读数。
+
+## 已确认存在但具体料号仍不完整的产品器件
+
+官方产品资料还确认：
+
+- **2 个 IMU**，body + head 各一个；
+- **2 个 NFC 天线**，head + beak 各一个；
+- microphones + speaker；
+- 专用 camera-use indicator。
+
+当前源码能够确认 LSM6DSV16X 和开发 HAT 上 dormant 的 BMI088，但现有公开证据还不足以把最终量产 body/head 两颗 IMU 完整映射到固定芯片料号。
 
 ## 来源
 
 - https://pollen-robotics.com/microduck/press-kit/
+- https://store.pollen-robotics.com/products/microduck
 - https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/model.rs
 - https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/imu.rs
 - https://github.com/pollen-robotics/microduck/blob/main/deploy/robotd.toml
-- https://github.com/pollen-robotics/microduck/blob/main/docs/design/robotd-design.md
+- https://github.com/pollen-robotics/microduck/blob/main/deploy/audio/i2c3-pihat.dts
+- https://github.com/pollen-robotics/microduck/blob/main/deploy/audio/aic3104-i2c3.dts
 - https://github.com/pollen-robotics/microduck/blob/main/docs/project/media-bringup.md
 - https://github.com/pollen-robotics/microduck_rl
 
-独立项目 `fanhao375/microduck-replica` 对这些公开源码做了更激进的电控重建。OpenMicroDuck 对其独立推导部分统一标记为“社区重建”，除非能够再次从上述官方来源确认。
+更完整的部件表见：[公开硬件清单与 BOM 状态](public-bom.md)。模型推导出的螺丝、轴承和装配信息见：[社区推导 BOM](community-bom-reconstruction.md)。
