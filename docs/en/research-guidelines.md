@@ -24,6 +24,37 @@ Contributions must be appropriate for public disclosure. Do not contribute:
 - unrelated private engineering work merely because it could be useful for comparison;
 - third-party assets without compatible rights and attribution.
 
+## Write for a reader who is new to robotics
+
+Technical accuracy is not enough if the page is difficult to understand.
+
+For normal explanatory pages:
+
+1. **Explain the job before the code name.** Write “camera/video service (`mediad`)”, not only “`mediad`”.
+2. **Show the whole flow first.** A small diagram should come before a long list of modules or parameters when it helps orientation.
+3. **Use plain language before specialist terms.** If a term such as daemon, observation, policy, IPC or kinematics matters, explain it in one short sentence the first time.
+4. **Do not stack unexplained nouns.** Avoid sentences that require the reader to already know several frameworks, protocols or source-tree names.
+5. **Separate overview from reference detail.** Dense tables are appropriate in parameter-reference pages, but they should follow a short “what this means” section.
+6. **Prefer one clear diagram over repeated prose.** Do not explain the same architecture three different ways on one page.
+7. **Keep paragraphs short.** One paragraph should usually explain one idea.
+8. **Answer four questions early:** What is this? What does it do? Where does it sit in the robot? What is confirmed versus uncertain?
+
+A useful architecture style is:
+
+```text
+sensor
+  ↓
+perception
+  ↓
+behavior decision
+  ↓
+movement policy
+  ↓
+motor control
+```
+
+Only after that should the page introduce names such as `tofd`, `mediad`, `robotd`, JSON-RPC, Unix sockets, RKNN or ONNX Runtime.
+
 ## Reverse-engineering documentation
 
 Good reverse-engineering notes explain:
