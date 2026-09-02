@@ -11,11 +11,14 @@ OpenMicroDuck 的文档分成两类：
 
 建议按这个顺序：
 
-1. [从这里开始](getting-started/README.md) —— 用普通话看懂整台机器人。
-2. [Microduck 软件架构：一眼看懂](software/runtime-architecture.md) —— 感知、高层行为、运动 AI 和电机控制怎么配合。
-3. [第一步先做仿真](getting-started/simulation-first.md) —— 不碰真实硬件，先让虚拟机器人动起来。
-4. [公开复现路线图](getting-started/public-reproduction-roadmap.md) —— 按阶段做研究和验证。
-5. [硬件 Bring-up 与标定](getting-started/hardware-bringup-and-calibration.md) —— 第一次上真机时按正确顺序排查。
+1. [官方在线 Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) —— 不安装软件，先玩一分钟。
+2. [先选路线](getting-started/choose-your-path.md) —— 按电脑、GPU、费用和目标选入口。
+3. [小白术语表](getting-started/glossary.md) —— 用普通话分清运行、训练和 sim-to-real。
+4. [从这里开始](getting-started/README.md) —— 看懂整台机器人。
+5. [第一步先做仿真](getting-started/simulation-first.md) —— 本地运行现成 ONNX。
+6. [新手排错](getting-started/troubleshooting.md) —— 按症状判断是哪一层出错。
+
+已经有官方 Microduck 的用户从[官方真机用户入口](getting-started/official-robot-owner.md)开始；制作研究样机再看[公开复现路线图](getting-started/public-reproduction-roadmap.md)和[硬件 Bring-up 与标定](getting-started/hardware-bringup-and-calibration.md)。
 
 ## 硬件
 
@@ -29,6 +32,7 @@ OpenMicroDuck 的文档分成两类：
 
 ## 软件与控制
 
+- [官方真机用户入口](getting-started/official-robot-owner.md) —— 第一次开机、手柄、健康状态、更新和安全边界。
 - [Microduck 软件架构：一眼看懂](software/runtime-architecture.md) —— **软件部分最推荐的入口。**
 - [控制循环：Microduck 到底怎么动起来](software/control-loop-and-sensor-dataflow.md) —— 50 Hz 运动循环和 61 维 Policy 输入。
 - [Autonomous Brain：高层行为怎么决定](software/autonomous-brain.md) —— 感知结果怎样变成“走 / 转 / 看 / 休息”等决定。
@@ -37,6 +41,9 @@ OpenMicroDuck 的文档分成两类：
 
 ## 仿真与训练
 
+- [先选路线：电脑、GPU 与费用](getting-started/choose-your-path.md)
+- [小白术语表](getting-started/glossary.md)
+- [新手排错](getting-started/troubleshooting.md)
 - [第一步先做仿真](getting-started/simulation-first.md)
 - [仿真与强化学习](simulation/model-and-rl.md)
 - [行为、任务与奖励设计](simulation/behavior-task-and-reward-design.md) —— **要创建一个新动作时从这里开始。**
@@ -74,4 +81,4 @@ OpenMicroDuck 的文档分成两类：
 
 参数参考页可以保留详细表格，但第一部分必须让普通读者不查术语也能大致看懂。
 
-最近一次资料检索：**2026-08-31**。
+核心官方来源最近一次核对：**2026-09-02**。社区仓库检索快照仍为 **2026-08-31**。

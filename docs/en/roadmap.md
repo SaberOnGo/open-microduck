@@ -108,6 +108,15 @@ The current documentation set includes paired English / Simplified Chinese pages
 - structure and assembly map;
 - sim-to-real parameter reference.
 
+## Beginner usability additions completed on 2026-09-02
+
+- added the no-install official browser Sandbox to the landing page;
+- added Choose Your Path, a beginner glossary, and symptom-based troubleshooting;
+- separated the official-robot owner route from the research-replica route;
+- added prerequisites, cloud-cost, `--dry-run`, job-cancellation, and credential-safety guidance;
+- updated the reviewed upstream execution baseline while preserving the original evidence revisions on parameter-extraction pages;
+- added Issue Forms for documentation errors, reproduction failures, and new sources.
+
 ## Next useful public research topics
 
 Good future additions, when public evidence is sufficient, include:

@@ -4,6 +4,12 @@
 
 > Goal: see an official Microduck model run an official deployable policy before buying or building any hardware.
 
+## Do not want to install anything yet?
+
+Open the [official Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) to run official policies directly in a browser. That is the true step zero for a first-time reader.
+
+This page continues with a local run. Read [Computer, GPU, and Cost Requirements](choose-your-path.md) first if you are unsure which path fits your machine.
+
 ## Why this should be the first step
 
 A physical biped mixes many possible failure sources:
@@ -41,6 +47,16 @@ The official runtime repository includes policies for walking, standing, sit/sta
 
 ## Recommended first experiment
 
+### What you need before starting
+
+| Item | Requirement for this step |
+|---|---|
+| Git | Clones and pins the two official repositories |
+| `uv` | Installs and runs the Python project; see the [official `uv` installation guide](https://docs.astral.sh/uv/getting-started/installation/) |
+| GPU | Running an existing ONNX does not require a training GPU; official local training explicitly requires CUDA |
+| Disk and network | The first sync downloads substantial dependencies; exact size varies by upstream version and platform |
+| Operating system | This project has not completed a native Windows / WSL2 / Linux / macOS compatibility matrix and makes no unverified promise |
+
 ### Step 1 — clone both official repositories
 
 ```bash
@@ -52,9 +68,9 @@ For exact reproduction of this documentation snapshot:
 
 ```bash
 cd microduck_rl
-git checkout d424a0c899f6b33cbd3daeb279913134349c0b63
+git checkout 5946fd9cdbc58956424420153e51975af3b30d77
 cd ../microduck
-git checkout 590b986bd8c0d50ae02cb3ea2f59c463b6828168
+git checkout 9f7eaad1008fffd90ef871a33a18aecd066b51a9
 ```
 
 Using the latest upstream branch is also reasonable for normal exploration, but record the commit when reporting results.
@@ -77,6 +93,8 @@ uv sync
 ```
 
 For merely running CPU MuJoCo inference, the main goal is to get the repository dependencies installed successfully. A training GPU is not required for the concept of this first validation step.
+
+If `uv`, the task registry, the viewer, ONNX, or CUDA fails, do not edit model parameters first. Work through [Beginner Troubleshooting](troubleshooting.md) by layer.
 
 ### Step 3 — use an already-trained official policy
 

@@ -1,0 +1,56 @@
+name: 新资料或社区项目 / New source or community project
+description: 提交新的官方来源、公开实测或相关社区项目
+title: "[Source] "
+body:
+  - type: input
+    id: url
+    attributes:
+      label: 公开链接 / Public URL
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: 来源类型 / Source type
+      options:
+        - 官方产品页或 Press Kit / Official product page or press kit
+        - 官方源码或文档 / Official source or documentation
+        - 厂商 Datasheet / Manufacturer datasheet
+        - 公开实测或观察 / Public measurement or observation
+        - 社区项目 / Community project
+        - 媒体或其它二手来源 / Media or other secondary source
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: 它能证明或补充什么？ / What does it add?
+      description: 分清直接事实、推导和待验证项。
+    validations:
+      required: true
+
+  - type: textarea
+    id: revision
+    attributes:
+      label: 版本和路径 / Revision and path
+      description: Git commit、branch、文件路径、硬件/固件版本或网页核对日期。
+
+  - type: input
+    id: license
+    attributes:
+      label: 许可证 / License
+      description: 如果希望复制或修改资产，必须填写；只提供链接也请说明已知状态。
+      placeholder: Apache-2.0 / CC BY-SA-NC / unknown / link only
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: public
+    attributes:
+      label: 公开来源确认 / Public-source confirmation
+      options:
+        - label: 这是公开取得的资料，不包含保密、泄露、私有或账号内容。
+          required: true

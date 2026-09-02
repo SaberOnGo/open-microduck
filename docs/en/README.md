@@ -11,11 +11,14 @@ OpenMicroDuck is organized for two kinds of readers:
 
 Read these in order:
 
-1. [Start Here](getting-started/README.md) — the whole robot in plain language.
-2. [How the Microduck Software Fits Together](software/runtime-architecture.md) — sensing, behavior, movement AI and motors.
-3. [Simulation First](getting-started/simulation-first.md) — run the virtual robot before touching hardware.
-4. [Public Reproduction Roadmap](getting-started/public-reproduction-roadmap.md) — staged research path.
-5. [Hardware Bring-up and Calibration](getting-started/hardware-bringup-and-calibration.md) — first real-hardware checks in the right order.
+1. [Official browser Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) — play for a minute without installing software.
+2. [Choose Your Path](getting-started/choose-your-path.md) — pick an entry by goal, computer, GPU, and cost.
+3. [Beginner Glossary](getting-started/glossary.md) — separate running, training, and sim-to-real.
+4. [Start Here](getting-started/README.md) — understand the whole robot.
+5. [Simulation First](getting-started/simulation-first.md) — run an existing ONNX policy locally.
+6. [Beginner Troubleshooting](getting-started/troubleshooting.md) — diagnose by symptom and layer.
+
+Owners of an official Microduck should start at the [Official Robot Owner Guide](getting-started/official-robot-owner.md). Research-replica builders should continue to the [Public Reproduction Roadmap](getting-started/public-reproduction-roadmap.md) and [Hardware Bring-up and Calibration](getting-started/hardware-bringup-and-calibration.md).
 
 ## Hardware
 
@@ -29,6 +32,7 @@ Read these in order:
 
 ## Software and control
 
+- [Official Robot Owner Guide](getting-started/official-robot-owner.md) — first boot, gamepad, health checks, updates, and safety boundaries.
 - [How the Microduck Software Fits Together](software/runtime-architecture.md) — **best software entry page**.
 - [Control Loop: How the Robot Moves](software/control-loop-and-sensor-dataflow.md) — 50 Hz movement loop and the 61-D policy input.
 - [Autonomous Brain and High-Level Behavior](software/autonomous-brain.md) — how perception becomes “walk / turn / look / rest” decisions.
@@ -37,6 +41,9 @@ Read these in order:
 
 ## Simulation and learning
 
+- [Choose Your Path: Computer, GPU, and Cost](getting-started/choose-your-path.md)
+- [Beginner Glossary](getting-started/glossary.md)
+- [Beginner Troubleshooting](getting-started/troubleshooting.md)
 - [Simulation First](getting-started/simulation-first.md)
 - [Simulation and Reinforcement Learning](simulation/model-and-rl.md)
 - [Behavior, Task, and Reward Design](simulation/behavior-task-and-reward-design.md) — **start here when creating a new action**.
@@ -74,4 +81,4 @@ Which facts are confirmed, inferred or still unknown?
 
 Detailed reference pages may still contain dense tables, but the first section should explain the subject without requiring specialist vocabulary.
 
-Last source sweep: **2026-08-31**.
+Core official sources last checked: **2026-09-02**. The broader community-repository discovery snapshot remains **2026-08-31**.

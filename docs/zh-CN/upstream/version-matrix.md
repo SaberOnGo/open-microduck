@@ -8,15 +8,25 @@ Microduck 目前还处在非常活跃的开发阶段。今天正确的源码细�
 
 因此，这里单独保存 OpenMicroDuck 当前资料检索所对应的版本基线。
 
-## 2026-08-31 资料快照
+## 2026-09-02 核心官方来源快照
 
 | 上游来源 | Branch / 页面 | 本次核对版本 | 在 OpenMicroDuck 中主要用于 |
 |---|---|---|---|
-| `pollen-robotics/microduck` | `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` | 机载 Runtime、daemon、motor/IMU 控制、部署配置、硬件 bring-up |
-| `pollen-robotics/microduck_rl` | `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` | MuJoCo/mjlab 训练、task registry、机器人模型、BAM、backlash、ONNX export |
+| `pollen-robotics/microduck` | `main` | `9f7eaad1008fffd90ef871a33a18aecd066b51a9` | 机载 Runtime、daemon、motor/IMU 控制、部署配置、硬件 bring-up |
+| `pollen-robotics/microduck_rl` | `develop` | `5946fd9cdbc58956424420153e51975af3b30d77` | MuJoCo/mjlab 训练、task registry、机器人模型、BAM、backlash、ONNX export、HF Jobs |
 | `Rhoban/bam` | `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` | 官方 RL 栈使用的 actuator model |
-| Pollen Robotics Microduck Press Kit | 实时网页 | 2026-08-31 核对 | 官方产品规格，以及哪些参数仍属于 provisional |
-| Pollen Robotics Microduck 产品页 / 商店 | 实时网页 | 2026-08-31 核对 | 当前产品定位、包装内容、销售页规格和可用性 |
+| Pollen Robotics Microduck Press Kit | 实时网页 | 2026-09-02 核对 | 官方产品规格，以及哪些参数仍属于 provisional |
+| Pollen Robotics Microduck 产品页 / Sandbox | 实时网页 | 2026-09-02 核对 | 当前产品定位、在线仿真入口和公开能力 |
+
+## 本次更新影响
+
+本轮实际比较了旧快照与新 HEAD：
+
+- `microduck` `590b986... → 9f7eaad...`：只变更 CI workflow 和 `duck-detect` 的平台类型转换，没有改本文引用的电机、IMU、Policy 或部署参数文件。
+- `microduck_rl` `d424a0c... → 5946fd9...`：只变更 HF Jobs 命令入口、相关说明和测试，没有改 Robot Model、Task 或 Sim-to-real 参数文件。
+- `5946fd9...` 修复了 `train --hf-jobs` 可能被错误 CLI entry point 接管的问题，因此执行教程更新到新 commit。
+
+已有参数表如果明确写着“来源为 `d424a0c...`”，仍保留原始 SHA，表示那些数字实际从哪个快照提取；这和教程使用更新后的执行基线并不矛盾。
 
 ## 为什么要记录 Commit SHA？
 
@@ -25,7 +35,7 @@ Microduck 目前还处在非常活跃的开发阶段。今天正确的源码细�
 例如：
 
 ```text
-2026-08-31
+2026-09-02
 microduck_rl/develop → commit A
 
 以后
@@ -69,9 +79,9 @@ microduck_rl/develop → commit B
 ```text
 Source: pollen-robotics/microduck_rl
 Branch: develop
-Commit: d424a0c899f6b33cbd3daeb279913134349c0b63
+Commit: 5946fd9cdbc58956424420153e51975af3b30d77
 Path: src/mjlab_microduck/...
-Checked: 2026-08-31
+Checked: 2026-09-02
 ```
 
 对实时产品页：
@@ -79,7 +89,7 @@ Checked: 2026-08-31
 ```text
 Source: Pollen Robotics Microduck Press Kit
 URL: https://pollen-robotics.com/microduck/press-kit/
-Checked: 2026-08-31
+Checked: 2026-09-02
 Evidence level: Official product spec
 ```
 

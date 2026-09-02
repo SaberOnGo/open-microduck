@@ -1,0 +1,73 @@
+name: 复现失败 / Reproduction problem
+description: 仿真、训练、导出或真机公开复现没有按文档工作
+title: "[Reproduction] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先看 `docs/zh-CN/getting-started/troubleshooting.md`。请粘贴文本错误，不要只发截图；公开前删除 Token、Secret、Wi-Fi 和个人信息。
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: 失败阶段 / Stage
+      options:
+        - 在线 Sandbox / Browser Sandbox
+        - 安装或 uv sync / Installation
+        - CPU 仿真推理 / CPU simulation inference
+        - 本地 GPU 训练 / Local GPU training
+        - Hugging Face Jobs / Cloud training
+        - ONNX 导出或加载 / ONNX export or load
+        - 官方真机使用 / Official robot use
+        - 公开研究样机 / Public research replica
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境 / Environment
+      description: OS、WSL/容器、GPU、驱动/CUDA、`uv --version`。
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: revisions
+    attributes:
+      label: 版本 / Revisions
+      description: OpenMicroDuck、microduck、microduck_rl 的 commit；不适用的写 N/A。
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: 完整命令 / Exact command
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: 完整错误与预期结果 / Error and expected result
+      description: 包含第一条错误以及你原本期待看到什么。
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: checks
+    attributes:
+      label: 已完成的只读检查 / Read-only checks tried
+      description: 例如 `git rev-parse HEAD`、`uv run list-envs`、`nvidia-smi`。
+
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: 脱敏确认 / Redaction
+      options:
+        - label: 我已删除 Token、Secret、私钥、Wi-Fi、设备身份和个人信息。
+          required: true

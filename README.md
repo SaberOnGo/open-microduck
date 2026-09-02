@@ -12,6 +12,12 @@ OpenMicroDuck turns public Microduck information into a practical reference: wha
 
 > OpenMicroDuck is not affiliated with or endorsed by Pollen Robotics or Hugging Face. It does not claim that Microduck is open-source hardware. Public evidence shows an open software stack, while complete production mechanical/electronic design files are not published as open-source hardware.
 
+## Try it online in 30 seconds — no installation
+
+Open the [official Pollen Robotics Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator), move with the arrow keys or `WASD`, and press `Space` to reset.
+
+This runs an already-trained official policy. It needs no Python, CUDA, or physical robot, and it is not retraining. New to those words? Start with the [Beginner Glossary](docs/en/getting-started/glossary.md).
+
 ## Microduck in 20 seconds
 
 ```text
@@ -32,21 +38,18 @@ Other sensors ─────────────────────┘
 
 The standard walking policy does **not** directly consume camera images or the raw 8×8 ToF frame. Camera perception, ToF processing, high-level behavior, movement AI, and motor control are separate layers.
 
-## Start here
+## Start by choosing your path
 
-| Goal | Read this |
-|---|---|
-| Understand the whole robot | [Start Here](docs/en/getting-started/README.md) |
-| Understand the software architecture | [How the Microduck Software Fits Together](docs/en/software/runtime-architecture.md) |
-| Run the virtual robot first | [Simulation First](docs/en/getting-started/simulation-first.md) |
-| Follow a reproduction path | [Public Reproduction Roadmap](docs/en/getting-started/public-reproduction-roadmap.md) |
-| Bring up real hardware safely | [Hardware Bring-up and Calibration](docs/en/getting-started/hardware-bringup-and-calibration.md) |
-| Understand high-level behavior | [Autonomous Brain](docs/en/software/autonomous-brain.md) |
-| Understand geometry and position estimation | [Kinematics and Odometry](docs/en/software/kinematics-and-odometry.md) |
-| Find hardware-bus details | [`robotd` Hardware Protocol](docs/en/software/robotd-hardware-protocol.md) |
-| Find hardware parameters | [Hardware Parameter Reference](docs/en/hardware/parameter-reference.md) |
-| Understand assembly | [Structure and Assembly Map](docs/en/hardware/structure-and-assembly-map.md) |
-| Find sim-to-real values | [Sim-to-Real Parameter Reference](docs/en/simulation/sim-to-real-parameter-reference.md) |
+| Goal | Difficulty | Start here |
+|---|---:|---|
+| See it move online | 0 | [Official Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
+| Understand robotics and RL | 1 | [Beginner Glossary](docs/en/getting-started/glossary.md) |
+| Run an existing policy locally | 2 | [Simulation First](docs/en/getting-started/simulation-first.md) |
+| Train or modify a behavior | 3 | [Training and ONNX Export](docs/en/simulation/reproducible-training-and-export.md) |
+| Use an official production robot | 2 | [Official Robot Owner Guide](docs/en/getting-started/official-robot-owner.md) |
+| Build a public research replica | 5 | [Public Reproduction Roadmap](docs/en/getting-started/public-reproduction-roadmap.md) |
+
+Not sure about computer, GPU, account, or cost requirements? Read [Choose Your Path](docs/en/getting-started/choose-your-path.md). If something failed, use [Beginner Troubleshooting](docs/en/getting-started/troubleshooting.md).
 
 ## Four numbers to remember
 
@@ -78,6 +81,9 @@ The standard walking policy does **not** directly consume camera images or the r
 
 ### Simulation and learning
 
+- [Path, Computer, GPU, and Cost Requirements](docs/en/getting-started/choose-your-path.md)
+- [Beginner Glossary](docs/en/getting-started/glossary.md)
+- [Beginner Troubleshooting](docs/en/getting-started/troubleshooting.md)
 - [Simulation and Reinforcement Learning](docs/en/simulation/model-and-rl.md)
 - [Policy Catalog and Switching](docs/en/simulation/policy-catalog-and-switching.md)
 - [Reproducible Training and ONNX Export](docs/en/simulation/reproducible-training-and-export.md)

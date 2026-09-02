@@ -4,6 +4,12 @@
 
 > Public, source-backed information only. This page is for readers who do not already know robotics.
 
+## Step zero: play for one minute without installing anything
+
+Open the [official Pollen Robotics Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator), move with the arrow keys or `WASD`, and press `Space` to reset.
+
+You are **running an already-trained official policy**, not retraining it. Use [Choose Your Path](choose-your-path.md) for computer, GPU, and cloud choices, or the [Beginner Glossary](glossary.md) when a term is unfamiliar.
+
 ## Microduck in one picture
 
 A useful way to understand the whole robot is:
@@ -64,7 +70,12 @@ This distinction prevents a common misunderstanding: the camera and ToF do not d
 
 | Goal | Read this |
 |---|---|
+| Try it online without installing software | [Official Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
+| Choose a computer, GPU, and cost path | [Choose Your Path](choose-your-path.md) |
+| Understand policy, reward, and ONNX | [Beginner Glossary](glossary.md) |
 | Make the virtual robot move first | [Simulation First](simulation-first.md) |
+| Diagnose a failed local run | [Beginner Troubleshooting](troubleshooting.md) |
+| Use an official production Microduck | [Official Robot Owner Guide](official-robot-owner.md) |
 | Understand the complete software flow | [How the Microduck software fits together](../software/runtime-architecture.md) |
 | Understand the 50 Hz movement loop | [Control Loop: How the Robot Moves](../software/control-loop-and-sensor-dataflow.md) |
 | Find hardware parameters | [Hardware Parameter Reference](../hardware/parameter-reference.md) |
@@ -127,10 +138,10 @@ Unknown values stay marked as unknown instead of being guessed.
 | **Measured** | reproducible physical measurement with conditions recorded |
 | **Unresolved** | not enough public evidence yet |
 
-## Upstream snapshot used for the current parameter sweep
+## Upstream versions used by the current tutorials
 
-- `pollen-robotics/microduck` main: `590b986bd8c0d50ae02cb3ea2f59c463b6828168`
-- `pollen-robotics/microduck_rl` develop: `d424a0c899f6b33cbd3daeb279913134349c0b63`
+- `pollen-robotics/microduck` main: `9f7eaad1008fffd90ef871a33a18aecd066b51a9`
+- `pollen-robotics/microduck_rl` develop: `5946fd9cdbc58956424420153e51975af3b30d77`
 - `Rhoban/bam` main: `620a64fe67c1afe94fca81da73b128c7aed17c5f`
 
-See [Upstream Version Matrix](../upstream/version-matrix.md) for version-sensitive details.
+Some parameter references still name the older commit from which values were actually extracted. That is intentional: tutorial execution baselines, parameter evidence snapshots, and live-page check dates are separate records. See [Upstream Version Matrix](../upstream/version-matrix.md).

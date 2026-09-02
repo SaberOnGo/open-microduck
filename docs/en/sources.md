@@ -1,6 +1,6 @@
 # Sources and Evidence Map
 
-> Last source sweep: 2026-08-31.
+> Core official sources last checked: 2026-09-02. The broader community-repository discovery snapshot remains 2026-08-31.
 
 OpenMicroDuck is a source-driven public research project. A technical statement should be traceable to an authoritative source, reproducible observation, or clearly labeled community derivation.
 
@@ -21,10 +21,10 @@ Version-sensitive OpenMicroDuck pages in this source sweep are anchored to:
 
 | Source | Revision checked |
 |---|---|
-| `pollen-robotics/microduck` `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` |
-| `pollen-robotics/microduck_rl` `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` |
+| `pollen-robotics/microduck` `main` | `9f7eaad1008fffd90ef871a33a18aecd066b51a9` |
+| `pollen-robotics/microduck_rl` `develop` | `5946fd9cdbc58956424420153e51975af3b30d77` |
 | `Rhoban/bam` `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` |
-| Pollen Robotics product/press pages | checked 2026-08-31 |
+| Pollen Robotics product/press pages/Sandbox | checked 2026-09-02 |
 
 See [Upstream version matrix](upstream/version-matrix.md) for the purpose and update rules for this snapshot.
 
@@ -60,6 +60,12 @@ Preferred source for current product-level specifications, including:
 - explicit list of specifications that are still provisional.
 
 A reader-friendly product baseline is maintained in [Official Microduck specifications](product/official-specifications.md).
+
+### Official browser Sandbox
+
+https://huggingface.co/spaces/pollen-robotics/microduck-simulator
+
+Used as the zero-install beginner experience. The official Space states that it runs MuJoCo WebAssembly and ONNX Runtime Web in the browser using public official robot models and policies. It is a simulation experience, not third-party real-hardware validation.
 
 ## Official onboard software
 

@@ -4,6 +4,12 @@
 
 > 目标：在购买或制作任何硬件之前，先让官方 Microduck 模型跑起官方可部署 ONNX Policy。
 
+## 不想安装？先用官方在线版
+
+如果你只是想先看看 Microduck 怎样运动，打开 [官方 Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator)。浏览器里可以直接运行官方 Policy；这比本地安装更适合作为真正的第 0 步。
+
+本页继续讲本地运行。开始前建议先看[路线、电脑与费用要求](choose-your-path.md)。
+
 ## 为什么第一步应该是仿真？
 
 一台真实双足机器人会把很多问题同时混在一起：
@@ -50,6 +56,16 @@
 
 ## 推荐的第一个实验
 
+### 开始前需要什么
+
+| 项目 | 这一步的要求 |
+|---|---|
+| Git | 用来下载和固定两个官方仓库版本 |
+| `uv` | 用来安装和运行 Python 项目；未安装时看 [`uv` 官方说明](https://docs.astral.sh/uv/getting-started/installation/) |
+| GPU | 运行现成 ONNX 不要求训练 GPU；官方本地训练才明确需要 CUDA GPU |
+| 磁盘和网络 | 第一次同步会下载较多依赖；具体大小随上游版本和平台变化 |
+| 系统 | 本轮没有完成 Windows 原生 / WSL2 / Linux / macOS 全平台实测，不做未经验证的兼容承诺 |
+
 ### 第 1 步：Clone 两个官方仓库
 
 ```bash
@@ -61,9 +77,9 @@ git clone https://github.com/pollen-robotics/microduck
 
 ```bash
 cd microduck_rl
-git checkout d424a0c899f6b33cbd3daeb279913134349c0b63
+git checkout 5946fd9cdbc58956424420153e51975af3b30d77
 cd ../microduck
-git checkout 590b986bd8c0d50ae02cb3ea2f59c463b6828168
+git checkout 9f7eaad1008fffd90ef871a33a18aecd066b51a9
 ```
 
 平时探索也可以直接使用上游最新 branch，但如果要发表结果或比较实验，一定要记下 commit。
@@ -86,6 +102,8 @@ uv sync
 ```
 
 第一阶段只是跑 CPU MuJoCo inference，并不需要先拥有一块适合大规模训练的 GPU。这里的重点只是：**先把官方模型和 Policy 跑起来。**
+
+如果 `uv`、Task、Viewer、ONNX 或 CUDA 报错，不要直接修改模型参数，先按[新手排错](troubleshooting.md)逐层检查。
 
 ### 第 3 步：先用官方已经训练好的 Policy
 

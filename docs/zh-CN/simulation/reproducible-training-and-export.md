@@ -32,6 +32,36 @@ Microduck Runtime
 
 如果没有本地 GPU，官方 README 还提供了通过 Hugging Face Jobs 运行训练的方式。
 
+> **费用提醒：** Hugging Face Jobs 会创建云端计算任务。Hugging Face 官方说明，Jobs 需要正的账户余额，并按所选硬件的运行时间计费。先查看[实时定价](https://huggingface.co/docs/hub/jobs-pricing)，不要在不了解费用、timeout 和取消方法时直接提交。
+
+当前教程执行基线为 `microduck_rl` `5946fd9cdbc58956424420153e51975af3b30d77`。它修复了 `train --hf-jobs` 命令入口问题；更早的 `d424a0c...` 参数快照仍可用于复查当时的模型数据，但不应作为 HF Jobs 教程的执行版本。
+
+## 没有本地 GPU：先 Dry Run，再决定是否提交
+
+官方 HF Jobs 说明使用缓存的 Hugging Face Token，并可转发 W&B 凭据：
+
+```bash
+hf auth login
+wandb login
+```
+
+第一次先加 `--dry-run`。它只生成并显示 Job 规格，不提交云任务：
+
+```bash
+uv run train Mjlab-Velocity-Flat-MicroDuck \
+  --env.scene.num-envs 4096 \
+  --agent.max_iterations 5 \
+  --hf-jobs --dry-run
+```
+
+确认 namespace、GPU flavor、timeout、上传内容和费用后，才移除 `--dry-run`。提交后应保存 Job ID；不再需要时，可在 Hugging Face Jobs 页面停止，或使用：
+
+```bash
+hf jobs cancel <job-id>
+```
+
+Token、W&B Key 和其它凭据不得提交到 Git、文档、截图或公开日志。
+
 ## 1. Clone 官方仓库
 
 ```bash
@@ -216,6 +246,8 @@ uv run --with pytest pytest tests/
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/AGENTS.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/export.py
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/infer_policy.py
+- https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/hf/README.md
+- https://huggingface.co/docs/hub/jobs-pricing
 - https://github.com/Rhoban/bam
 
 ## 相关页面
@@ -224,3 +256,5 @@ uv run --with pytest pytest tests/
 - [技能、Policy 与运行时切换](policy-catalog-and-switching.md)
 - [仿真模型资产参考](model-assets-reference.md)
 - [上游版本基线](../upstream/version-matrix.md)
+- [路线、电脑、GPU 与费用要求](../getting-started/choose-your-path.md)
+- [新手排错](../getting-started/troubleshooting.md)

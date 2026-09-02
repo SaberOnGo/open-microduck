@@ -1,0 +1,62 @@
+name: 文档错误 / Documentation problem
+description: 报告不清楚、过时、冲突或可能误导的内容
+title: "[Docs] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢帮助改进文档。请引用公开来源，不要上传私有资料、设备 Secret、Token 或个人信息。
+
+  - type: input
+    id: page
+    attributes:
+      label: 页面 / Page
+      description: 文件路径、标题或链接。
+      placeholder: docs/zh-CN/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 哪里有问题 / What is wrong?
+      description: 说明哪句话不清楚、过时、冲突或难以操作。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: 证据类型 / Evidence type
+      options:
+        - 官方产品规格 / Official product specification
+        - 官方源码或文档 / Official source or documentation
+        - 官方仿真模型 / Official simulation model
+        - 可复现实测 / Reproducible measurement
+        - 社区重建或推导 / Community reconstruction or inference
+        - 待确认 / Unresolved
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: 公开来源 / Public source
+      description: URL；如果依赖源码，请同时提供 commit 和路径。
+      placeholder: https://... ; commit ... ; path ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议修改 / Suggested change
+      description: 尽量用普通话描述希望怎样改。
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: 公开与安全确认 / Public and safe
+      options:
+        - label: 我没有提交私有、保密、泄露资料、凭据或个人信息。
+          required: true

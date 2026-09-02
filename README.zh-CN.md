@@ -12,6 +12,12 @@ OpenMicroDuck 把已经公开的 Microduck 资料整理成能真正使用的参�
 
 > OpenMicroDuck 与 Pollen Robotics、Hugging Face 不存在官方隶属或授权关系。本项目不声称 Microduck 是开源硬件。公开资料表明其软件栈开放，但完整量产机械和电子设计文件并未作为开源硬件发布。
 
+## 30 秒在线体验：不用安装
+
+打开 [Pollen Robotics 官方 Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator)，用方向键或 `WASD` 控制虚拟 Microduck，按 `Space` 重置。
+
+这是运行官方已经训练好的 Policy：不需要 Python、CUDA 或实体硬件，也不等于重新训练模型。完全不懂这些词也没关系，先看[小白术语表](docs/zh-CN/getting-started/glossary.md)。
+
 ## 20 秒看懂 Microduck
 
 ```text
@@ -32,21 +38,18 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 
 标准 Walking Policy **不会直接读取 Camera 图像或原始 8×8 ToF 深度图**。视觉、ToF、高层行为、运动 AI 和电机控制是分开的几层。
 
-## 第一次看，从这里开始
+## 第一次看，先选自己的路线
 
-| 你想做什么 | 先看这一页 |
-|---|---|
-| 看懂整台机器人 | [从这里开始](docs/zh-CN/getting-started/README.md) |
-| 看懂软件架构 | [Microduck 软件架构：一眼看懂](docs/zh-CN/software/runtime-architecture.md) |
-| 先跑虚拟机器人 | [第一步先做仿真](docs/zh-CN/getting-started/simulation-first.md) |
-| 按步骤做公开复现 | [公开复现路线图](docs/zh-CN/getting-started/public-reproduction-roadmap.md) |
-| 第一次上真机 | [硬件 Bring-up 与标定](docs/zh-CN/getting-started/hardware-bringup-and-calibration.md) |
-| 看懂高层行为怎么决定 | [Autonomous Brain](docs/zh-CN/software/autonomous-brain.md) |
-| 看懂脚/头位置和里程计 | [运动学与里程计](docs/zh-CN/software/kinematics-and-odometry.md) |
-| 查真机总线细节 | [`robotd` 硬件协议](docs/zh-CN/software/robotd-hardware-protocol.md) |
-| 查硬件参数 | [硬件参数总表](docs/zh-CN/hardware/parameter-reference.md) |
-| 看懂结构怎么装 | [结构与装配地图](docs/zh-CN/hardware/structure-and-assembly-map.md) |
-| 查 Sim-to-real 参数 | [Sim-to-real 参数总表](docs/zh-CN/simulation/sim-to-real-parameter-reference.md) |
+| 你想做什么 | 难度 | 先看这一页 |
+|---|---:|---|
+| 在线看看它怎么动 | 0 | [官方在线 Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
+| 看懂机器人和强化学习 | 1 | [小白术语表](docs/zh-CN/getting-started/glossary.md) |
+| 在本地运行现成 Policy | 2 | [第一步先做仿真](docs/zh-CN/getting-started/simulation-first.md) |
+| 训练或修改一个动作 | 3 | [训练与 ONNX 导出](docs/zh-CN/simulation/reproducible-training-and-export.md) |
+| 使用购买的官方真机 | 2 | [官方真机用户入口](docs/zh-CN/getting-started/official-robot-owner.md) |
+| 制作公开研究样机 | 5 | [公开复现路线图](docs/zh-CN/getting-started/public-reproduction-roadmap.md) |
+
+不确定电脑、GPU、账号或费用要求时，先看[路线与电脑要求](docs/zh-CN/getting-started/choose-your-path.md)；遇到错误看[新手排错](docs/zh-CN/getting-started/troubleshooting.md)。
 
 ## 先记住 4 个数字
 
@@ -78,6 +81,9 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 
 ### 仿真与训练
 
+- [路线、电脑、GPU 与费用要求](docs/zh-CN/getting-started/choose-your-path.md)
+- [小白术语表](docs/zh-CN/getting-started/glossary.md)
+- [新手排错](docs/zh-CN/getting-started/troubleshooting.md)
 - [仿真与强化学习](docs/zh-CN/simulation/model-and-rl.md)
 - [技能、Policy 与运行时切换](docs/zh-CN/simulation/policy-catalog-and-switching.md)
 - [可复现训练与 ONNX 导出](docs/zh-CN/simulation/reproducible-training-and-export.md)

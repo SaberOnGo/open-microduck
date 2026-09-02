@@ -1,6 +1,6 @@
 # 资料来源与证据地图
 
-> 最近一次资料检索：2026-08-31。
+> 核心官方来源最近一次核对：2026-09-02。社区仓库发现快照仍为 2026-08-31。
 
 OpenMicroDuck 是一个以来源可追溯为基本原则的公开研究项目。关于 Microduck 的技术结论应尽可能回到官方资料、可复现实验，或明确标注为社区推导。
 
@@ -19,10 +19,10 @@ OpenMicroDuck 是一个以来源可追溯为基本原则的公开研究项目。
 
 | 来源 | 本次核对版本 |
 |---|---|
-| `pollen-robotics/microduck` `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` |
-| `pollen-robotics/microduck_rl` `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` |
+| `pollen-robotics/microduck` `main` | `9f7eaad1008fffd90ef871a33a18aecd066b51a9` |
+| `pollen-robotics/microduck_rl` `develop` | `5946fd9cdbc58956424420153e51975af3b30d77` |
 | `Rhoban/bam` `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` |
-| Pollen Robotics 产品页 / Press Kit | 2026-08-31 核对 |
+| Pollen Robotics 产品页 / Press Kit / Sandbox | 2026-09-02 核对 |
 
 为什么要记录这些版本、以后怎样更新，见[上游版本基线](upstream/version-matrix.md)。
 
@@ -43,6 +43,12 @@ https://pollen-robotics.com/microduck/press-kit/
 Press Kit 还明确列出仍处于 provisional 状态的规格，因此具体 camera/FOV、LiDAR range、radio version 等不应被第三方开发资料提前固定成量产规格。
 
 面向普通读者的产品级整理见 [Microduck 官方规格基线](product/official-specifications.md)。
+
+### 官方浏览器 Sandbox
+
+https://huggingface.co/spaces/pollen-robotics/microduck-simulator
+
+用于新手零安装体验。官方 Space 说明它在浏览器中运行 MuJoCo WebAssembly 和 ONNX Runtime Web，并使用公开的官方 Robot Model 与 Policy。它是仿真体验，不是第三方真机验证。
 
 ## 官方机载软件
 

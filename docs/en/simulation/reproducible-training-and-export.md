@@ -32,6 +32,36 @@ The official quickstart currently expects:
 
 The upstream README also documents Hugging Face Jobs as an alternative when a local GPU is not available.
 
+> **Cost warning:** Hugging Face Jobs creates cloud compute resources. Hugging Face states that Jobs require a positive credit balance and bill for selected hardware runtime. Read the [live pricing](https://huggingface.co/docs/hub/jobs-pricing) before submitting, and understand timeouts and cancellation first.
+
+The current tutorial execution baseline is `microduck_rl` `5946fd9cdbc58956424420153e51975af3b30d77`. It fixes the `train --hf-jobs` entry point. The older `d424a0c...` parameter snapshot remains useful for reproducing values at that revision, but should not be used as the HF Jobs tutorial execution version.
+
+## No local GPU: dry-run before submitting
+
+The official HF Jobs guide uses a cached Hugging Face token and can forward W&B credentials:
+
+```bash
+hf auth login
+wandb login
+```
+
+For the first attempt, add `--dry-run`. It builds and prints the Job specification without submitting cloud compute:
+
+```bash
+uv run train Mjlab-Velocity-Flat-MicroDuck \
+  --env.scene.num-envs 4096 \
+  --agent.max_iterations 5 \
+  --hf-jobs --dry-run
+```
+
+Remove `--dry-run` only after checking the namespace, GPU flavor, timeout, uploaded content, and cost. Save the Job ID after submission. Stop an unnecessary Job from the Hugging Face Jobs page or with:
+
+```bash
+hf jobs cancel <job-id>
+```
+
+Never put tokens, W&B keys, or other credentials in Git, documentation, screenshots, or public logs.
+
 ## 1. Clone the official repository
 
 ```bash
@@ -193,6 +223,8 @@ These include configuration/reward invariants and are useful before changing a t
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/AGENTS.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/export.py
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/infer_policy.py
+- https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/hf/README.md
+- https://huggingface.co/docs/hub/jobs-pricing
 - https://github.com/Rhoban/bam
 
 ## Related pages
@@ -201,3 +233,5 @@ These include configuration/reward invariants and are useful before changing a t
 - [Policy catalog and switching](policy-catalog-and-switching.md)
 - [Model assets reference](model-assets-reference.md)
 - [Upstream version matrix](../upstream/version-matrix.md)
+- [Computer, GPU, and cost requirements](../getting-started/choose-your-path.md)
+- [Beginner troubleshooting](../getting-started/troubleshooting.md)

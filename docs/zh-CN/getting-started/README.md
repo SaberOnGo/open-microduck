@@ -4,6 +4,12 @@
 
 > 这里只整理公开、可追溯的资料。这一页不要求读者先懂机器人、强化学习或 Linux。
 
+## 第 0 步：先玩一分钟，不安装任何软件
+
+打开 [Pollen Robotics 官方 Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator)，用方向键或 `WASD` 控制，按 `Space` 重置。
+
+你现在做的是“运行官方已经训练好的 Policy”，不是重新训练。需要选择电脑、GPU 或云训练路线时看[先选路线](choose-your-path.md)；看不懂术语时看[小白术语表](glossary.md)。
+
 ## 先用一张图看懂整台机器人
 
 ```text
@@ -62,7 +68,12 @@
 
 | 你想做什么 | 先看这一页 |
 |---|---|
+| 不安装软件，在线体验 | [官方 Microduck Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
+| 不确定电脑、GPU 和费用 | [先选路线](choose-your-path.md) |
+| 看不懂 Policy、Reward、ONNX | [小白术语表](glossary.md) |
 | 先让虚拟 Microduck 动起来 | [第一步先做仿真](simulation-first.md) |
+| 本地运行失败 | [新手排错](troubleshooting.md) |
+| 使用购买的官方 Microduck | [官方真机用户入口](official-robot-owner.md) |
 | 看懂整套软件怎么配合 | [Microduck 软件架构：一眼看懂](../software/runtime-architecture.md) |
 | 看懂 50 Hz 运动控制 | [控制循环：Microduck 到底怎么动起来](../software/control-loop-and-sensor-dataflow.md) |
 | 查硬件参数 | [硬件参数总表](../hardware/parameter-reference.md) |
@@ -125,10 +136,10 @@
 | **Measured / 实测** | 有测试条件、可重复的真实硬件测量 |
 | **Unresolved / 待确认** | 当前公开证据不足 |
 
-## 当前参数整理使用的上游版本
+## 当前教程使用的上游版本
 
-- `pollen-robotics/microduck` main：`590b986bd8c0d50ae02cb3ea2f59c463b6828168`
-- `pollen-robotics/microduck_rl` develop：`d424a0c899f6b33cbd3daeb279913134349c0b63`
+- `pollen-robotics/microduck` main：`9f7eaad1008fffd90ef871a33a18aecd066b51a9`
+- `pollen-robotics/microduck_rl` develop：`5946fd9cdbc58956424420153e51975af3b30d77`
 - `Rhoban/bam` main：`620a64fe67c1afe94fca81da73b128c7aed17c5f`
 
-版本敏感信息见：[上游版本基线](../upstream/version-matrix.md)。
+部分参数表仍明确引用较早的实际提取 commit；这不是冲突。教程执行基线、参数证据快照和实时网页核对日期应分别记录。详见：[上游版本基线](../upstream/version-matrix.md)。

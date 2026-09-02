@@ -8,15 +8,25 @@ Microduck is under active development. A statement that is correct today can bec
 
 This page provides a simple version baseline for the current OpenMicroDuck documentation sweep.
 
-## Source snapshot — 2026-08-31
+## Core official-source snapshot — 2026-09-02
 
 | Upstream source | Branch / page | Revision checked | Role in OpenMicroDuck |
 |---|---|---|---|
-| `pollen-robotics/microduck` | `main` | `590b986bd8c0d50ae02cb3ea2f59c463b6828168` | onboard runtime, daemons, motor/IMU control, deployment config, hardware bring-up |
-| `pollen-robotics/microduck_rl` | `develop` | `d424a0c899f6b33cbd3daeb279913134349c0b63` | MuJoCo/mjlab training, task registry, robot models, BAM integration, backlash, ONNX export |
+| `pollen-robotics/microduck` | `main` | `9f7eaad1008fffd90ef871a33a18aecd066b51a9` | onboard runtime, daemons, motor/IMU control, deployment config, hardware bring-up |
+| `pollen-robotics/microduck_rl` | `develop` | `5946fd9cdbc58956424420153e51975af3b30d77` | MuJoCo/mjlab training, task registry, robot models, BAM integration, backlash, ONNX export, HF Jobs |
 | `Rhoban/bam` | `main` | `620a64fe67c1afe94fca81da73b128c7aed17c5f` | actuator model used by the official RL stack |
-| Pollen Robotics Microduck press kit | live page | checked 2026-08-31 | official product-level specifications and provisional-status notices |
-| Pollen Robotics Microduck product page/store | live pages | checked 2026-08-31 | current public product positioning, package contents, availability, store-level values |
+| Pollen Robotics Microduck press kit | live page | checked 2026-09-02 | official product-level specifications and provisional-status notices |
+| Pollen Robotics Microduck product page/Sandbox | live pages | checked 2026-09-02 | current product positioning, online simulator entry, and public capabilities |
+
+## Impact of this update
+
+This sweep compared each old snapshot with the new HEAD:
+
+- `microduck` `590b986... → 9f7eaad...`: only the CI workflow and a platform type conversion in `duck-detect` changed; none of the motor, IMU, policy, or deployment parameter files cited here changed.
+- `microduck_rl` `d424a0c... → 5946fd9...`: only the HF Jobs entry point, related documentation, and tests changed; robot models, tasks, and sim-to-real parameter files did not.
+- `5946fd9...` fixes a case where `train --hf-jobs` could be handled by the wrong CLI entry point, so execution tutorials now use the newer commit.
+
+An existing parameter table may still say “source: `d424a0c...`”. That SHA remains the exact source from which its values were extracted; it does not conflict with using a newer execution baseline in tutorials.
 
 ## Why record a commit SHA?
 
@@ -25,7 +35,7 @@ A branch name is a moving pointer.
 For example:
 
 ```text
-2026-08-31
+2026-09-02
 microduck_rl/develop → commit A
 
 later
@@ -67,9 +77,9 @@ For version-sensitive work, prefer this style:
 ```text
 Source: pollen-robotics/microduck_rl
 Branch: develop
-Commit: d424a0c899f6b33cbd3daeb279913134349c0b63
+Commit: 5946fd9cdbc58956424420153e51975af3b30d77
 Path: src/mjlab_microduck/...
-Checked: 2026-08-31
+Checked: 2026-09-02
 ```
 
 For a live product page:
@@ -77,7 +87,7 @@ For a live product page:
 ```text
 Source: Pollen Robotics Microduck Press Kit
 URL: https://pollen-robotics.com/microduck/press-kit/
-Checked: 2026-08-31
+Checked: 2026-09-02
 Evidence level: Official product spec
 ```
 

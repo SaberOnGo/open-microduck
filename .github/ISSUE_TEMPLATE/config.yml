@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Pollen Robotics official Microduck repository
+    url: https://github.com/pollen-robotics/microduck
+    about: Official product/runtime behavior and upstream software issues belong upstream.
