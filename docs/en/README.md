@@ -39,6 +39,7 @@ Read these in order:
 
 - [Simulation First](getting-started/simulation-first.md)
 - [Simulation and Reinforcement Learning](simulation/model-and-rl.md)
+- [Behavior, Task, and Reward Design](simulation/behavior-task-and-reward-design.md) — **start here when creating a new action**.
 - [Policy Catalog and Runtime Switching](simulation/policy-catalog-and-switching.md)
 - [Reproducible Training and ONNX Export](simulation/reproducible-training-and-export.md)
 - [Simulation Model Assets Reference](simulation/model-assets-reference.md)
