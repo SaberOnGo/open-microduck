@@ -39,6 +39,7 @@ OpenMicroDuck 的文档分成两类：
 
 - [第一步先做仿真](getting-started/simulation-first.md)
 - [仿真与强化学习](simulation/model-and-rl.md)
+- [行为、任务与奖励设计](simulation/behavior-task-and-reward-design.md) —— **要创建一个新动作时从这里开始。**
 - [技能、Policy 与运行时切换](simulation/policy-catalog-and-switching.md)
 - [可复现训练与 ONNX 导出](simulation/reproducible-training-and-export.md)
 - [仿真模型资产参考](simulation/model-assets-reference.md)
