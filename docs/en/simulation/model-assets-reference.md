@@ -3,8 +3,10 @@
 **English** | [简体中文](../../zh-CN/simulation/model-assets-reference.md)
 
 > Primary source: official `pollen-robotics/microduck_rl` repository.
+>
+> Model-family naming checked against `microduck_rl/develop` commit `29e887ecfbf5d37144759e5a9f8a176dfb83d547` on **2026-09-03**.
 
-The official RL repository does not use one universal robot XML for every task. It contains several MJCF variants because walking, lying on the floor, rolling, and skating need different contact models.
+The official RL repository does not use one universal robot XML for every task. Walking, lying on the floor, rolling, and full-body contact need different collision models.
 
 This page explains what the main public model families are for and how to avoid comparing the wrong assets.
 
@@ -18,22 +20,65 @@ src/mjlab_microduck/robot/microduck/
 
 The directory contains robot MJCF/XML files, scene wrappers, mesh assets, export configuration, and helper scripts such as the backlash-model generator.
 
-## Main robot model families
+## Important 2026-09-02 naming change
+
+An upstream model re-export corrected a misleading old name.
+
+The older `allcollisions` family was **not** actually “every collision on every part.” It was a curated set of collision geoms intended for parts that may contact the floor in ground tasks.
+
+Upstream therefore changed the naming to:
+
+```text
+old curated `allcollisions` role
+              ↓ renamed
+         `groundcontact`
+```
+
+and introduced a new true:
+
+```text
+robot_allcollisions.xml
+```
+
+where every part can carry collision geometry.
+
+This is not just cosmetic naming. It changes how a reader should interpret an experiment.
+
+## Main robot model families now
 
 | Model | Main purpose | Why it is different |
 |---|---|---|
-| `robot_walk.xml` | Main walking / velocity task | Reduced trunk/head contact scope; optimized for gait training rather than full-body floor interaction |
-| `robot_allcollisions.xml` | Stand-up, sit/stand, ground pick, ball kick, roulade, recovery-style tasks | Full-body collision/contact is needed because the robot can lie on or roll over the floor |
-| `robot_allcollisions_rollers.xml` | Roller / skating tasks | Adds passive roller-wheel mechanics and the contact structure needed for skating |
-| `robot_*_backlash.xml` | Backlash variants of the main models | Adds passive gear-play hinges in series with controlled servo joints |
+| `robot_walk.xml` | Main walking / velocity work | Walking-oriented model with reduced body-collision scope |
+| `robot_groundcontact.xml` | Ground-contact tasks | Curated contact set for parts expected to touch the floor; this is the renamed role of the older misleading `allcollisions` name |
+| `robot_groundcontact_rollers.xml` | Roller / skating work | Ground-contact variant plus passive roller-wheel mechanics |
+| `robot_allcollisions.xml` | True full-part collision inspection / experiments | New variant in which every part carries a collision geom, apart from explicitly excluded pathological contact pairs |
+| `*_backlash.xml` | Backlash variants | Adds passive gear-play hinges in series with controlled servo joints |
+
+The current upstream tree also contains matching scene wrappers such as `scene.xml`, `scene_walk.xml`, `scene_rollers.xml`, `scene_backlash.xml`, `scene_allcollisions.xml`, and the apartment scene used by recent simulation work.
+
+## How different are `groundcontact` and true `allcollisions`?
+
+The upstream re-export PR reports approximately:
+
+```text
+groundcontact collision geoms: 11
+true allcollisions geoms:       70
+true allcollisions meshes:      37
+```
+
+The all-collisions variant explicitly excludes one known phantom self-contact pair around the neck/jaw closed-loop geometry where CAD meshes interpenetrate in all poses.
+
+Evidence level: **official public upstream repository / merged PR**.
+
+The PR also reports that the re-exported walking and curated ground-contact models remained physics-identical to the previous versions for joint names/order/ranges, masses, inertias, frames, and their intended collision sets; the visible CAD material colors changed.
 
 ## Why `robot_walk.xml` is not “less accurate” by definition
 
 A simulation model is often simplified for the task it is solving.
 
-For ordinary walking training, detailed contacts on every shell surface can make falling/contact computation more expensive without improving the desired gait. A walking-oriented model can therefore intentionally reduce some body contacts.
+For ordinary walking training, detailed contacts on every shell surface can make contact computation more complicated without improving the desired gait. A walking-oriented model can therefore intentionally reduce some body contacts.
 
-That is different from a recovery task, where the robot must physically touch the floor with its trunk/head and get back up. For that task, all-collision geometry matters.
+That is different from a recovery or full-body-contact experiment, where the robot may physically lie on or roll across the floor.
 
 So the correct question is not:
 
@@ -41,7 +86,7 @@ So the correct question is not:
 
 It is:
 
-> Which model variant matches the behavior being trained or tested?
+> Which model variant matches the behavior or physical question being tested?
 
 ## Scene files
 
@@ -50,13 +95,16 @@ The repository also contains `scene*.xml` files. These wrap robot models with en
 - a floor;
 - initial poses / keyframes;
 - stand, sit, or folded configurations;
-- convenient setup for visualization and `infer_policy.py`.
+- convenient setup for visualization and inference tools;
+- in newer work, richer environments such as an apartment.
 
 A scene file is therefore not the same thing as the reusable robot body model itself.
 
+The newer `duck-body` simulator also accepts a custom scene through `--scene`, which makes the distinction especially useful for hardware-variant studies.
+
 ## Mesh assets
 
-The public model assets include visual geometry for many robot parts, including body shells, legs, feet, head/neck structures, beak-related parts, motor-like geometry, battery/board placeholders, and roller attachments.
+The public model assets include visual geometry for many robot parts, including body shells, legs, feet, head/neck structures, beak-related parts, motor geometry, board/battery geometry, and roller attachments.
 
 These assets are highly useful for:
 
@@ -87,6 +135,8 @@ These are very valuable for simulation and analysis.
 
 Evidence label: **official simulation model parameter**, not automatically “measured production-unit value.”
 
+The 2026-09-02 re-export is useful evidence that these parameters are tied to the upstream CAD-to-MJCF workflow rather than being arbitrary visualization-only values.
+
 ## Roller models
 
 Roller tasks use passive wheel joints under the feet. In the official naming convention, unactuated joints are generally named `passive_*`.
@@ -110,11 +160,13 @@ This makes it possible to compare idealized and backlash-aware simulations witho
 
 ## Onshape export workflow
 
-The upstream README states that the MJCF robot models are exported from Onshape using `onshape-to-robot`, with `config_mjcf_*.json` files associated with model generation.
+The upstream repository records MJCF export recipes in `config_mjcf_*.json` files and uses `onshape-to-robot` in the model-generation workflow.
 
-This provenance is useful because it distinguishes:
+The 2026-09-02 re-export explicitly states that the walk / ground-contact / roller models were re-exported from updated CAD and then checked by compiled-model comparison.
 
-- upstream-generated simulation geometry;
+This provenance helps distinguish:
+
+- upstream-generated simulation geometry and dynamics;
 - later community-transformed / combined meshes;
 - production manufacturing drawings, which are not publicly released as open-source hardware.
 
@@ -133,6 +185,7 @@ Before comparing two simulation results, record:
 
 ```text
 robot XML / scene XML
+walk / groundcontact / true allcollisions
 backlash or non-backlash
 roller or normal feet
 upstream commit SHA
@@ -147,10 +200,11 @@ Otherwise two experiments that look like “the same Microduck” may actually u
 
 - https://github.com/pollen-robotics/microduck_rl
 - https://github.com/pollen-robotics/microduck_rl/tree/develop/src/mjlab_microduck/robot/microduck
-- https://github.com/pollen-robotics/microduck_rl/blob/develop/README.md
+- https://github.com/pollen-robotics/microduck_rl/pull/29
 
 ## Related pages
 
+- [Hardware Variant Simulation](hardware-variant-simulation.md)
 - [Mechanical structure and kinematics](../hardware/mechanical-structure.md)
 - [Simulation and reinforcement learning](model-and-rl.md)
 - [Reproducible training and ONNX export](reproducible-training-and-export.md)
