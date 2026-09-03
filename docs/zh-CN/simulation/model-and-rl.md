@@ -1,6 +1,8 @@
 # 仿真与强化学习
 
 > 主要参考：官方 `pollen-robotics/microduck_rl` 仓库。
+>
+> 核心上游状态最近一次核对：**2026-09-03**。
 
 ## 官方训练栈
 
@@ -67,16 +69,21 @@ body-pose command           6
 
 ## 多种机器人模型
 
-官方不是用一个 XML 处理所有任务：
+官方不是用一个 XML 处理所有任务。
+
+2026-09-02 上游重新导出模型时修正了一个旧命名问题：原先经过筛选的 `allcollisions` 角色改名为 `groundcontact`，同时新增真正的 `robot_allcollisions.xml`。
 
 | 模型 | 用途 |
 |---|---|
-| `robot_walk.xml` | 行走模型，减少部分身体碰撞 |
-| `robot_allcollisions.xml` | 起身、翻滚、拾取等完整接触任务 |
-| `robot_allcollisions_rollers.xml` | 带被动轮的滚轮模型 |
+| `robot_walk.xml` | walking-oriented，身体碰撞范围更简化 |
+| `robot_groundcontact.xml` | 为倒地/接地任务保留经过挑选的 collision set |
+| `robot_groundcontact_rollers.xml` | ground-contact 模型 + 被动 roller mechanics |
+| `robot_allcollisions.xml` | 真正的全零件碰撞 variant，用于 collision inspection / experiment |
 | `*_backlash.xml` | 插入被动齿隙关节的 sim-to-real 变体 |
 
-这意味着“用于训练行走的模型”和“能够真实躺在地面上的全碰撞模型”本来就可能不同。
+这意味着“用于训练行走的模型”和“用于检查全身接触的模型”本来就可能不同。
+
+当前文件结构和这次命名变化见[仿真模型资产参考](model-assets-reference.md)。
 
 ## BAM 执行器模型
 
@@ -115,6 +122,28 @@ body-pose command           6
 
 具体范围应读取当前 upstream env config，避免把一次版本中的数字永久复制成固定规格。
 
+## 软件在环的 MuJoCo Body
+
+官方公开的 `microduck_rl/develop` 现在已经包含 `duck-body`，可以通过 TCP 提供一个 MuJoCo 机体，并支持自定义 scene：
+
+```bash
+uv run duck-body --scene path/to/scene.xml
+```
+
+这意味着 MuJoCo body 不再只能作为“训练环境”使用；它也可以放到真实控制软件所使用的 hardware-I/O 边界下面。
+
+对应的 daemon 侧实现目前位于官方公开分支：
+
+```text
+pollen-robotics/microduck: sim-remote-io
+```
+
+这个分支通过 `robotd --sim HOST:PORT` 使用 remote `RobotIo`。
+
+截至 **2026-09-03**，daemon 侧这部分**还没有合并到 `microduck/main`**。因此正确标签应该是“官方公开上游实验路径”，而不是稳定发布功能。
+
+如果想用小白方式理解“哪些硬件参数可以改、哪些 Microduck 软件接口应该保持不变”，看[硬件变体仿真](hardware-variant-simulation.md)。
+
 ## ONNX 导出
 
 官方导出流程会把 observation normalization 烘焙到 ONNX graph 中：
@@ -133,6 +162,8 @@ checkpoint + training normalizer
 
 官方仓库提供在 CPU MuJoCo 中回放 ONNX 等工具，也反复强调训练时 filter、runtime action processing 等必须和真实部署保持一致。某些看似很小的低通、scale 或反馈差异，都可能让仿真正常的策略在真机上明显退化。
 
+最近的上游 ToF 修复还说明了一点：仿真 fidelity 不只是数值参数。模拟 ToF 的左右列方向约定曾经和真实处理路径相反，导致 mapping 左右镜像，修正 coordinate convention 后才恢复正常。
+
 ## 社区仿真生态
 
 目前已经出现多个独立实现：
@@ -143,16 +174,20 @@ checkpoint + training normalizer
 - MJX/JAX/Brax 重写；
 - Swift 模型/策略实现。
 
-这些项目很有研究价值，但不能默认都与官方 mjlab baseline bit-for-bit 等价。状态和差异见 [社区逆向项目索引](../ecosystem/reverse-engineering-projects.md)。
+这些项目很有研究价值，但不能默认都与官方 mjlab baseline bit-for-bit 等价。状态和差异见[社区逆向项目索引](../ecosystem/reverse-engineering-projects.md)。
 
 ## 主要来源
 
 - https://github.com/pollen-robotics/microduck_rl
 - https://github.com/pollen-robotics/microduck
+- https://github.com/pollen-robotics/microduck/tree/sim-remote-io
 - https://github.com/Rhoban/bam
 
 ## 相关文档
 
+- [硬件变体仿真](hardware-variant-simulation.md)
+- [仿真模型资产参考](model-assets-reference.md)
+- [Sim-to-real 参数总表](sim-to-real-parameter-reference.md)
 - [机械结构](../hardware/mechanical-structure.md)
 - [电控与总线](../hardware/electronics-and-buses.md)
 - [机载运行时](../software/runtime-architecture.md)
