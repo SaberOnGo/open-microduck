@@ -46,6 +46,7 @@ OpenMicroDuck 的文档分成两类：
 - [新手排错](getting-started/troubleshooting.md)
 - [第一步先做仿真](getting-started/simulation-first.md)
 - [仿真与强化学习](simulation/model-and-rl.md)
+- [硬件变体仿真](simulation/hardware-variant-simulation.md) —— **小白入口：保持 Microduck 软件接口不变，只修改 MuJoCo 里的执行器、质量、惯量、几何、摩擦等物理参数。**
 - [行为、任务与奖励设计](simulation/behavior-task-and-reward-design.md) —— **要创建一个新动作时从这里开始。**
 - [技能、Policy 与运行时切换](simulation/policy-catalog-and-switching.md)
 - [可复现训练与 ONNX 导出](simulation/reproducible-training-and-export.md)
@@ -81,4 +82,4 @@ OpenMicroDuck 的文档分成两类：
 
 参数参考页可以保留详细表格，但第一部分必须让普通读者不查术语也能大致看懂。
 
-核心官方来源最近一次核对：**2026-09-02**。社区仓库检索快照仍为 **2026-08-31**。
+核心官方来源最近一次核对：**2026-09-03**。社区仓库检索快照仍为 **2026-08-31**。
