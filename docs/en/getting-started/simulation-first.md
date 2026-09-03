@@ -3,6 +3,8 @@
 **English** | [简体中文](../../zh-CN/getting-started/simulation-first.md)
 
 > Goal: see an official Microduck model run an official deployable policy before buying or building any hardware.
+>
+> Upstream baseline checked: **2026-09-03**.
 
 ## Do not want to install anything yet?
 
@@ -35,15 +37,13 @@ Two official repositories are enough for the first experiment:
 | `pollen-robotics/microduck_rl` | MuJoCo/MJCF robot models, inference script, RL environments, training/export tools |
 | `pollen-robotics/microduck` | deployable ONNX policies used by the current runtime |
 
-The runtime policy directory currently documents a common interface:
+The runtime policy family uses a common interface:
 
 ```text
 input:  obs[1, 61]
 output: actions[1, 14]
 rate:   50 Hz
 ```
-
-The official runtime repository includes policies for walking, standing, sit/stand, ground pick, kicks, rollers and forward roll.
 
 ## Recommended first experiment
 
@@ -53,7 +53,7 @@ The official runtime repository includes policies for walking, standing, sit/sta
 |---|---|
 | Git | Clones and pins the two official repositories |
 | `uv` | Installs and runs the Python project; see the [official `uv` installation guide](https://docs.astral.sh/uv/getting-started/installation/) |
-| GPU | Running an existing ONNX does not require a training GPU; official local training explicitly requires CUDA |
+| GPU | Running an existing ONNX does not require a training GPU; official local training uses CUDA |
 | Disk and network | The first sync downloads substantial dependencies; exact size varies by upstream version and platform |
 | Operating system | This project has not completed a native Windows / WSL2 / Linux / macOS compatibility matrix and makes no unverified promise |
 
@@ -64,13 +64,13 @@ git clone https://github.com/pollen-robotics/microduck_rl
 git clone https://github.com/pollen-robotics/microduck
 ```
 
-For exact reproduction of this documentation snapshot:
+For exact reproduction of the current OpenMicroDuck upstream snapshot:
 
 ```bash
 cd microduck_rl
-git checkout 5946fd9cdbc58956424420153e51975af3b30d77
+git checkout 29e887ecfbf5d37144759e5a9f8a176dfb83d547
 cd ../microduck
-git checkout 9f7eaad1008fffd90ef871a33a18aecd066b51a9
+git checkout 2c61dcc1f03440541cdc0729f7a375b2a9ea3005
 ```
 
 Using the latest upstream branch is also reasonable for normal exploration, but record the commit when reporting results.
@@ -115,7 +115,9 @@ uv run scripts/infer_policy.py \
   --new-cmd-obs
 ```
 
-The exact set of available policy files can change upstream, so check `microduck/policies/README.md` when using a different commit.
+At the current RL snapshot, CPU inference also uses the BAM M6 XL330 actuator path by default; `--no-bam` falls back to the XML PD actuators. That makes the inference path more useful for sim-to-real comparison than a purely ideal position actuator.
+
+The exact set of available policy files can change upstream, so check the active runtime repository when using a different commit.
 
 ### Step 4 — verify the important facts, not only the animation
 
@@ -139,15 +141,18 @@ microduck_rl/
 └── src/mjlab_microduck/robot/microduck/
 ```
 
-The most important files are:
+The main model families at the current snapshot are:
 
 | File | Use |
 |---|---|
 | `robot_walk.xml` | walking-oriented model with reduced collision scope |
-| `robot_allcollisions.xml` | full-body contact model for recovery/tricks/picking |
-| `robot_allcollisions_rollers.xml` | roller configuration with passive wheel joints |
-| `scene*.xml` | robot + floor + useful keyframes for viewing/inference |
+| `robot_groundcontact.xml` | curated body-contact model for recovery / ground tasks |
+| `robot_groundcontact_rollers.xml` | roller configuration with passive wheel mechanics |
+| `robot_allcollisions.xml` | true full-part collision model; currently an inspection/experimental model rather than the task default |
+| `scene*.xml` | robot + floor/environment + useful keyframes |
 | `add_backlash.py` / `*_backlash.xml` | inserts passive gear-play joints for backlash studies |
+
+The `groundcontact` name is newer. Upstream renamed the older curated `allcollisions` role because it did not actually contain collision geometry for every part.
 
 A beginner should first learn to identify:
 
@@ -160,17 +165,29 @@ right leg (5 joints)
 
 That is the 14-action locomotion tree. The physical runtime has a 15th mouth/beak motor that is controlled separately.
 
+## Optional next step: run the real control stack against a MuJoCo body
+
+The current `microduck_rl/develop` snapshot also contains `duck-body`, a TCP-served MuJoCo body that accepts a custom scene:
+
+```bash
+uv run duck-body --scene path/to/scene.xml
+```
+
+The matching `robotd --sim HOST:PORT` implementation is currently on the official public `pollen-robotics/microduck` branch `sim-remote-io`, **not on `main` as of 2026-09-03**.
+
+This is an upstream experimental path rather than a stable release feature. It is especially useful when the research question is “keep the Microduck software contract but change physical-model parameters.” See [Hardware Variant Simulation](../simulation/hardware-variant-simulation.md).
+
 ## The easiest training experiment comes second
 
-After inference works, run the official smoke test before any long training job:
+After inference works, run a small smoke test before any long training job:
 
 ```bash
 uv run train Mjlab-Velocity-Flat-MicroDuck \
   --env.scene.num-envs 64 \
-  --agent.max_iterations 5
+  --agent.max-iterations 5
 ```
 
-The official `AGENTS.md` explicitly recommends this small test first. Its purpose is not to learn a useful gait. It checks that the environment builds, steps without NaNs, computes observations/rewards, and can reach the export path.
+The purpose is not to learn a useful gait. It checks that the environment builds, steps without NaNs, computes observations/rewards, and reaches the training path.
 
 Only after that should a normal training run be launched, for example the official quickstart:
 
@@ -207,7 +224,7 @@ Examples:
 
 - actuator parameters;
 - backlash;
-- mass/CoM;
+- mass/CoM/inertia;
 - IMU error;
 - encoder bias;
 - command delay;
@@ -226,10 +243,6 @@ The official model already contains a large amount of useful geometry, inertia, 
 ### Do not train before confirming inference works
 
 An existing official ONNX policy is a much faster way to verify the deployment-side interface.
-
-### Do not buy all hardware just to discover the software contract
-
-The public repositories already expose most of the information needed to understand the 61/14/50-Hz control contract.
 
 ### Do not assume a simulator mesh is a manufacturing CAD package
 
@@ -254,10 +267,11 @@ This keeps setup failures separate from robotics failures.
 
 After completing this page:
 
-1. [Hardware parameter reference](../hardware/parameter-reference.md)
-2. [Structure and assembly map](../hardware/structure-and-assembly-map.md)
-3. [Sim-to-real parameter reference](../simulation/sim-to-real-parameter-reference.md)
-4. [Public reproduction roadmap](public-reproduction-roadmap.md)
+1. [Hardware Variant Simulation](../simulation/hardware-variant-simulation.md)
+2. [Hardware parameter reference](../hardware/parameter-reference.md)
+3. [Structure and assembly map](../hardware/structure-and-assembly-map.md)
+4. [Sim-to-real parameter reference](../simulation/sim-to-real-parameter-reference.md)
+5. [Public reproduction roadmap](public-reproduction-roadmap.md)
 
 ## Primary official sources
 
@@ -265,4 +279,5 @@ After completing this page:
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/README.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/AGENTS.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/infer_policy.py
-- https://github.com/pollen-robotics/microduck/tree/main/policies
+- https://github.com/pollen-robotics/microduck
+- https://github.com/pollen-robotics/microduck/tree/sim-remote-io
