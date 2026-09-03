@@ -1,6 +1,8 @@
 # Mechanical Structure and Kinematics
 
 > This page separates the **official simulation/kinematic model** from **community-derived assembly conclusions**.
+>
+> Model-family naming checked against `microduck_rl/develop` on **2026-09-03**.
 
 ## High-level geometry
 
@@ -47,12 +49,15 @@ The current official model files are under:
 
 `pollen-robotics/microduck_rl/src/mjlab_microduck/robot/microduck/`
 
-Important variants include:
+Important current variants include:
 
-- `robot_walk.xml` — walking model with reduced collision scope;
-- `robot_allcollisions.xml` — full-body collision model used by recovery/trick tasks;
-- `robot_allcollisions_rollers.xml` — roller configuration with passive wheel joints;
+- `robot_walk.xml` — walking-oriented model with reduced collision scope;
+- `robot_groundcontact.xml` — curated body-contact model for ground tasks;
+- `robot_groundcontact_rollers.xml` — ground-contact model with passive roller mechanics;
+- `robot_allcollisions.xml` — newer true all-part collision variant for collision inspection/experiments;
 - generated `*_backlash.xml` variants — insert passive backlash hinges for sim-to-real experiments.
+
+The `groundcontact` naming is important: upstream renamed the older curated `allcollisions` role because it never contained collision geometry for every part. See [Simulation Model Assets Reference](../simulation/model-assets-reference.md) for the current file map.
 
 ## Rigid-body mass and inertia
 
@@ -66,6 +71,8 @@ The public MJCF includes per-body mass, center of mass, and inertia tensors. Thi
 - independent visualization and assembly-tree reconstruction.
 
 These numbers are simulation-model parameters. They should not automatically be described as metrology results from a production unit.
+
+The 2026-09-02 upstream model re-export is useful evidence that mass, inertia, frames, and related dynamics are tied to the CAD-to-MJCF workflow: the upstream comparison reports the re-exported existing models remained physics-identical in those properties while visual material colors changed.
 
 ## Public visual/mesh assets
 
@@ -142,6 +149,7 @@ That is enough to reconstruct a high-quality **simulation assembly description**
 
 - https://github.com/pollen-robotics/microduck_rl
 - https://github.com/pollen-robotics/microduck_rl/tree/develop/src/mjlab_microduck/robot/microduck
+- https://github.com/pollen-robotics/microduck_rl/pull/29
 - https://pollen-robotics.com/microduck/press-kit/
 
 ## Community sources
@@ -149,4 +157,4 @@ That is enough to reconstruct a high-quality **simulation assembly description**
 - https://github.com/fanhao375/microduck-replica
 - https://github.com/boris721/microduck-3d
 
-See [public-bom.md](public-bom.md) for component evidence levels and [../legal/provenance-and-licenses.md](../legal/provenance-and-licenses.md) before redistributing upstream or derivative 3D assets.
+See [public-bom.md](public-bom.md) for component evidence levels, [Hardware Variant Simulation](../simulation/hardware-variant-simulation.md) for changing physical parameters while preserving the software contract, and [Provenance and Licensing](../legal/provenance-and-licenses.md) before redistributing upstream or derivative 3D assets.
