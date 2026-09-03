@@ -3,8 +3,10 @@
 [English](../../en/simulation/model-assets-reference.md) | **简体中文**
 
 > 主要来源：官方 `pollen-robotics/microduck_rl` 仓库。
+>
+> 模型家族命名最近一次核对：`microduck_rl/develop` commit `29e887ecfbf5d37144759e5a9f8a176dfb83d547`，日期 **2026-09-03**。
 
-官方 RL 项目并不是所有动作都使用同一个万能 XML。行走、倒地、翻滚、滑行对碰撞和接触的需求不同，所以官方仓库里有多套 MJCF variant。
+官方 RL 项目并不是所有动作都使用同一个万能 XML。行走、倒地、翻滚、滑行和真正的全身接触，对 collision/contact 的要求不同，所以官方仓库里有多套 MJCF variant。
 
 这份文档专门解释这些公开模型分别用来做什么，避免把不同物理模型混在一起比较。
 
@@ -18,22 +20,65 @@ src/mjlab_microduck/robot/microduck/
 
 这里包括 robot MJCF/XML、scene wrapper、mesh asset、export configuration，以及生成 backlash model 的辅助脚本。
 
-## 主要 Robot Model Family
+## 2026-09-02 一个很重要的命名变化
+
+上游重新导出模型时，修正了一个容易让人误解的旧名字。
+
+旧的 `allcollisions` 家族**并不是真正“每个零件都有碰撞”**。它其实只是为倒地/接地任务保留一组经过挑选的 collision geom。
+
+因此上游把原来的角色改名为：
+
+```text
+旧的 curated `allcollisions`
+             ↓ 改名
+        `groundcontact`
+```
+
+同时新增真正的：
+
+```text
+robot_allcollisions.xml
+```
+
+让所有部件都可以带 collision geometry。
+
+这不只是改文件名。它会直接影响读者怎样理解某一次仿真实验用了什么物理模型。
+
+## 现在主要的 Robot Model Family
 
 | Model | 主要用途 | 为什么不同 |
 |---|---|---|
-| `robot_walk.xml` | 主要 walking / velocity task | trunk/head 接触范围更简化，重点是 gait training，而不是全身躺地接触 |
-| `robot_allcollisions.xml` | StandUp、SitStand、GroundPick、BallKick、Roulade、恢复类 task | 机器人会趴、躺、翻滚，因此需要更完整的身体 collision/contact |
-| `robot_allcollisions_rollers.xml` | Roller / skating task | 加入被动 roller wheel 以及滑行所需的接触结构 |
-| `robot_*_backlash.xml` | 主要模型的 Backlash variant | 在受控舵机关节串联 passive gear-play hinge |
+| `robot_walk.xml` | 主要 walking / velocity 工作 | walking-oriented，身体 collision 范围更简化 |
+| `robot_groundcontact.xml` | 倒地/接地类 task | 为预期会接触地面的部件保留经过挑选的 collision；它就是旧 `allcollisions` 角色的新名字 |
+| `robot_groundcontact_rollers.xml` | Roller / skating 工作 | ground-contact 结构 + 被动 roller wheel |
+| `robot_allcollisions.xml` | 真正的全零件碰撞检查 / 实验 | 新增 true all-collisions variant，除明确排除的异常接触对外，每个部件都有 collision geom |
+| `*_backlash.xml` | Backlash variant | 在受控舵机关节串联 passive gear-play hinge |
+
+当前上游还包含对应的 scene wrapper，例如 `scene.xml`、`scene_walk.xml`、`scene_rollers.xml`、`scene_backlash.xml`、`scene_allcollisions.xml`，以及最近仿真工作使用的 apartment scene。
+
+## `groundcontact` 和真正 `allcollisions` 差多少？
+
+上游合并的模型重导出 PR 给出的规模大约是：
+
+```text
+groundcontact collision geoms：11
+true allcollisions geoms：      70
+true allcollisions meshes：     37
+```
+
+true all-collisions variant 还明确排除了一个 neck / jaw closed-loop 周围的虚假 self-contact pair，因为 CAD mesh 在所有姿态下都会有几毫米互相穿插。
+
+证据等级：**官方公开上游仓库 / 已合并 PR**。
+
+该 PR 同时说明：重新导出的 walking 和 curated ground-contact 模型，在 joint name/order/range、mass、inertia、frame 和原有 collision set 上与之前版本保持 physics-identical；主要可见变化是 CAD material color。
 
 ## `robot_walk.xml` 更简单，不代表它一定“不准确”
 
 仿真模型经常会针对任务做合理简化。
 
-普通 walking training 的目标是让双腿稳定跟踪速度。如果把身体每一个外壳面都做成复杂 contact，可能增加计算量，却不一定让 gait 更好。
+普通 walking training 的目标是让双腿稳定跟踪速度。如果把身体每一个外壳面都做成复杂 contact，可能增加计算和接触复杂度，却不一定让 gait 更好。
 
-但恢复 / 翻滚任务不一样：机器人必须真的用头、身体接触地面，再把自己撑起来。这时 full-body collision 就非常重要。
+但恢复 / 翻滚 / 全身接触实验不一样：机器人会真的用头、身体碰到地面。这时更完整的 collision geometry 就很重要。
 
 所以不应该问：
 
@@ -41,7 +86,7 @@ src/mjlab_microduck/robot/microduck/
 
 更合理的问题是：
 
-> 当前训练 / 测试的行为，应该用哪一种模型？
+> 当前训练 / 测试的行为或物理问题，应该用哪一种模型？
 
 ## Scene 文件是什么
 
@@ -52,9 +97,12 @@ src/mjlab_microduck/robot/microduck/
 - floor；
 - initial pose / keyframe；
 - STAND / SIT / FOLD 等姿态；
-- viewer 和 `infer_policy.py` 使用的快速场景。
+- viewer 和 inference 工具使用的快速场景；
+- 新一些的工作里还会加入 apartment 等更完整环境。
 
 因此 scene file 和“机器人本体模型”不是完全同一个概念。
+
+新的 `duck-body` simulator 还支持用 `--scene` 指定自定义场景，所以这一区分对硬件变体仿真尤其重要。
 
 ## Mesh 资产有什么用
 
@@ -64,8 +112,8 @@ src/mjlab_microduck/robot/microduck/
 - leg / foot；
 - head / neck；
 - beak 相关结构；
-- motor-like geometry；
-- battery / board placeholder；
+- motor geometry；
+- board / battery geometry；
 - roller attachment 等。
 
 这些 mesh 很适合：
@@ -86,7 +134,7 @@ src/mjlab_microduck/robot/microduck/
 - insert；
 - wiring channel；
 - 最终螺丝长度；
-- 材料标注；
+- 完整材料标注；
 - 其它制造细节。
 
 ## Mass、Inertia、Joint Axis、Limit
@@ -106,6 +154,8 @@ src/mjlab_microduck/robot/microduck/
 这些参数对仿真和分析非常有价值。
 
 但来源标签应该是：**官方仿真模型参数**，不能自动写成“量产实机测量值”。
+
+2026-09-02 的模型重导出还是一个很有价值的公开证据：这些 mass / inertia / frame 等参数和上游 CAD → MJCF 工作流是连在一起的，并不只是为了“显示外观”随便填的数字。
 
 ## Roller Model
 
@@ -132,11 +182,13 @@ Backlash variant 会在 14 个受控舵机关节里分别串联一个不驱动�
 
 ## Onshape Export 流程
 
-上游 README 说明，这些 MJCF robot model 来自 Onshape，并通过 `onshape-to-robot` 导出；仓库中还有对应的 `config_mjcf_*.json`。
+上游仓库用 `config_mjcf_*.json` 保存 MJCF export recipe，并在模型生成链里使用 `onshape-to-robot`。
 
-这条来源链很重要，因为它能帮助区分：
+2026-09-02 的重导出明确说明，walk / ground-contact / roller 模型重新从更新后的 CAD 导出，并通过 compiled-model comparison 检查。
 
-- 上游官方生成的 simulation geometry；
+这条来源链有助于区分：
+
+- 上游官方生成的 simulation geometry / dynamics；
 - 社区后来做的 transformed / combined mesh；
 - 没有作为 open-source hardware 发布的量产 manufacturing drawing。
 
@@ -157,6 +209,7 @@ Backlash variant 会在 14 个受控舵机关节里分别串联一个不驱动�
 
 ```text
 robot XML / scene XML
+walk / groundcontact / true allcollisions
 是否 Backlash
 是否 Roller
 上游 commit SHA
@@ -171,10 +224,11 @@ actuator configuration
 
 - https://github.com/pollen-robotics/microduck_rl
 - https://github.com/pollen-robotics/microduck_rl/tree/develop/src/mjlab_microduck/robot/microduck
-- https://github.com/pollen-robotics/microduck_rl/blob/develop/README.md
+- https://github.com/pollen-robotics/microduck_rl/pull/29
 
 ## 相关页面
 
+- [硬件变体仿真](hardware-variant-simulation.md)
 - [机械结构与运动学](../hardware/mechanical-structure.md)
 - [仿真与强化学习](model-and-rl.md)
 - [可复现训练与 ONNX 导出](reproducible-training-and-export.md)
