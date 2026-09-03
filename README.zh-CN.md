@@ -45,6 +45,7 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 | 在线看看它怎么动 | 0 | [官方在线 Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
 | 看懂机器人和强化学习 | 1 | [小白术语表](docs/zh-CN/getting-started/glossary.md) |
 | 在本地运行现成 Policy | 2 | [第一步先做仿真](docs/zh-CN/getting-started/simulation-first.md) |
+| 在仿真中研究 Microduck 兼容硬件变体 | 3 | [硬件变体仿真](docs/zh-CN/simulation/hardware-variant-simulation.md) |
 | 训练或修改一个动作 | 3 | [训练与 ONNX 导出](docs/zh-CN/simulation/reproducible-training-and-export.md) |
 | 使用购买的官方真机 | 2 | [官方真机用户入口](docs/zh-CN/getting-started/official-robot-owner.md) |
 | 制作公开研究样机 | 5 | [公开复现路线图](docs/zh-CN/getting-started/public-reproduction-roadmap.md) |
@@ -85,6 +86,7 @@ ToF ────► 障碍物几何算法 ────────┼──► �
 - [小白术语表](docs/zh-CN/getting-started/glossary.md)
 - [新手排错](docs/zh-CN/getting-started/troubleshooting.md)
 - [仿真与强化学习](docs/zh-CN/simulation/model-and-rl.md)
+- [硬件变体仿真](docs/zh-CN/simulation/hardware-variant-simulation.md)
 - [技能、Policy 与运行时切换](docs/zh-CN/simulation/policy-catalog-and-switching.md)
 - [可复现训练与 ONNX 导出](docs/zh-CN/simulation/reproducible-training-and-export.md)
 - [Sim-to-real 参数总表](docs/zh-CN/simulation/sim-to-real-parameter-reference.md)
