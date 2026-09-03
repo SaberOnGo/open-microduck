@@ -1,6 +1,8 @@
 # 机械结构与运动学
 
 > 本文严格区分**官方公开的仿真/运动学模型**与**社区根据公开资产推导出的装配结论**。
+>
+> 模型家族命名最近一次核对：**2026-09-03**。
 
 ## 整体尺寸
 
@@ -47,12 +49,15 @@ MJCF 文件包含明确的 hinge range。社区项目已经把这些值提取并
 
 `pollen-robotics/microduck_rl/src/mjlab_microduck/robot/microduck/`
 
-主要模型包括：
+当前主要模型包括：
 
-- `robot_walk.xml`：行走模型，减少了部分躯干/头部碰撞；
-- `robot_allcollisions.xml`：完整身体碰撞，用于起身、翻滚、拾取、踢球等；
-- `robot_allcollisions_rollers.xml`：带被动滚轮的轮滑模型；
+- `robot_walk.xml`：walking-oriented，减少部分身体碰撞；
+- `robot_groundcontact.xml`：为倒地/接地任务保留经过挑选的身体 collision；
+- `robot_groundcontact_rollers.xml`：ground-contact + 被动滚轮 mechanics；
+- `robot_allcollisions.xml`：较新的真正 all-part collision variant，用于 collision inspection / experiment；
 - `*_backlash.xml`：加入被动回差关节，用于 sim-to-real 回差实验。
+
+这里的 `groundcontact` 命名很重要：上游把旧的 curated `allcollisions` 角色改了名，因为它从来都不是“每个零件都带 collision”。当前文件地图见[仿真模型资产参考](../simulation/model-assets-reference.md)。
 
 ## 刚体质量与惯量
 
@@ -73,6 +78,8 @@ MJCF 文件包含明确的 hinge range。社区项目已经把这些值提取并
 - 第三方装配关系可视化。
 
 但这些数字属于**仿真模型参数**，不能自动描述成量产实物的精密测量结果。
+
+2026-09-02 上游模型重新导出提供了一个很有价值的公开证据：上游比较结果说明，重新导出的旧模型在 mass、inertia、frame 等动力学属性上保持 physics-identical，而可见变化主要是 material color。这说明这些参数和 CAD → MJCF 工作流是连在一起的，而不是单纯为了显示外观随便填写。
 
 ## 公开网格资产
 
@@ -149,6 +156,7 @@ MJCF 文件包含明确的 hinge range。社区项目已经把这些值提取并
 
 - https://github.com/pollen-robotics/microduck_rl
 - https://github.com/pollen-robotics/microduck_rl/tree/develop/src/mjlab_microduck/robot/microduck
+- https://github.com/pollen-robotics/microduck_rl/pull/29
 - https://pollen-robotics.com/microduck/press-kit/
 
 ## 社区来源
@@ -156,4 +164,4 @@ MJCF 文件包含明确的 hinge range。社区项目已经把这些值提取并
 - https://github.com/fanhao375/microduck-replica
 - https://github.com/boris721/microduck-3d
 
-组件证据等级见 [公开硬件清单](public-bom.md)。复制或再分发上游/衍生 3D 资产前，请阅读 [来源与许可证](../legal/provenance-and-licenses.md)。
+组件证据等级见[公开硬件清单](public-bom.md)，修改物理参数但保持软件接口不变的思路见[硬件变体仿真](../simulation/hardware-variant-simulation.md)。复制或再分发上游/衍生 3D 资产前，请阅读[来源与许可证](../legal/provenance-and-licenses.md)。
