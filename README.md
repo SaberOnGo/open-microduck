@@ -45,6 +45,7 @@ The standard walking policy does **not** directly consume camera images or the r
 | See it move online | 0 | [Official Sandbox](https://huggingface.co/spaces/pollen-robotics/microduck-simulator) |
 | Understand robotics and RL | 1 | [Beginner Glossary](docs/en/getting-started/glossary.md) |
 | Run an existing policy locally | 2 | [Simulation First](docs/en/getting-started/simulation-first.md) |
+| Study a Microduck-compatible hardware variant in simulation | 3 | [Hardware Variant Simulation](docs/en/simulation/hardware-variant-simulation.md) |
 | Train or modify a behavior | 3 | [Training and ONNX Export](docs/en/simulation/reproducible-training-and-export.md) |
 | Use an official production robot | 2 | [Official Robot Owner Guide](docs/en/getting-started/official-robot-owner.md) |
 | Build a public research replica | 5 | [Public Reproduction Roadmap](docs/en/getting-started/public-reproduction-roadmap.md) |
@@ -85,6 +86,7 @@ Not sure about computer, GPU, account, or cost requirements? Read [Choose Your P
 - [Beginner Glossary](docs/en/getting-started/glossary.md)
 - [Beginner Troubleshooting](docs/en/getting-started/troubleshooting.md)
 - [Simulation and Reinforcement Learning](docs/en/simulation/model-and-rl.md)
+- [Hardware Variant Simulation](docs/en/simulation/hardware-variant-simulation.md)
 - [Policy Catalog and Switching](docs/en/simulation/policy-catalog-and-switching.md)
 - [Reproducible Training and ONNX Export](docs/en/simulation/reproducible-training-and-export.md)
 - [Sim-to-Real Parameter Reference](docs/en/simulation/sim-to-real-parameter-reference.md)
