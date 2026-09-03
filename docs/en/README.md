@@ -46,6 +46,7 @@ Owners of an official Microduck should start at the [Official Robot Owner Guide]
 - [Beginner Troubleshooting](getting-started/troubleshooting.md)
 - [Simulation First](getting-started/simulation-first.md)
 - [Simulation and Reinforcement Learning](simulation/model-and-rl.md)
+- [Hardware Variant Simulation](simulation/hardware-variant-simulation.md) — **beginner guide to keeping the Microduck software contract while changing actuator, mass, inertia, geometry, friction, and related physical parameters in MuJoCo.**
 - [Behavior, Task, and Reward Design](simulation/behavior-task-and-reward-design.md) — **start here when creating a new action**.
 - [Policy Catalog and Runtime Switching](simulation/policy-catalog-and-switching.md)
 - [Reproducible Training and ONNX Export](simulation/reproducible-training-and-export.md)
@@ -81,4 +82,4 @@ Which facts are confirmed, inferred or still unknown?
 
 Detailed reference pages may still contain dense tables, but the first section should explain the subject without requiring specialist vocabulary.
 
-Core official sources last checked: **2026-09-02**. The broader community-repository discovery snapshot remains **2026-08-31**.
+Core official sources last checked: **2026-09-03**. The broader community-repository discovery snapshot remains **2026-08-31**.
