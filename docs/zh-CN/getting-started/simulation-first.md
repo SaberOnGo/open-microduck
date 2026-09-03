@@ -3,6 +3,8 @@
 [English](../../en/getting-started/simulation-first.md) | **简体中文**
 
 > 目标：在购买或制作任何硬件之前，先让官方 Microduck 模型跑起官方可部署 ONNX Policy。
+>
+> 上游基线最近一次核对：**2026-09-03**。
 
 ## 不想安装？先用官方在线版
 
@@ -33,7 +35,7 @@
 
 > **官方机器人模型能不能正常加载？官方 ONNX Policy 能不能在 MuJoCo 里控制它？**
 
-只要这一步成功，后面做硬件时就已经有了一条“已知正确”的参考链路。
+只要这一步成功，后面研究硬件时就已经有了一条“已知正确”的参考链路。
 
 ## 官方现在已经公开了什么？
 
@@ -44,15 +46,13 @@
 | `pollen-robotics/microduck_rl` | MuJoCo / MJCF 模型、推理脚本、RL 环境、训练与导出工具 |
 | `pollen-robotics/microduck` | 当前 Runtime 使用的可部署 ONNX Policy |
 
-当前 Runtime 的 Policy 目录明确记录了一套共同接口：
+当前 Policy 家族使用共同接口：
 
 ```text
 输入：  obs[1, 61]
 输出：  actions[1, 14]
 频率：  50 Hz
 ```
-
-官方 Runtime 仓库中已经有 Walking、Standing、Sit/Stand、Ground Pick、Kick、Roller、Roulade 等 Policy。
 
 ## 推荐的第一个实验
 
@@ -62,7 +62,7 @@
 |---|---|
 | Git | 用来下载和固定两个官方仓库版本 |
 | `uv` | 用来安装和运行 Python 项目；未安装时看 [`uv` 官方说明](https://docs.astral.sh/uv/getting-started/installation/) |
-| GPU | 运行现成 ONNX 不要求训练 GPU；官方本地训练才明确需要 CUDA GPU |
+| GPU | 运行现成 ONNX 不要求训练 GPU；官方本地训练使用 CUDA |
 | 磁盘和网络 | 第一次同步会下载较多依赖；具体大小随上游版本和平台变化 |
 | 系统 | 本轮没有完成 Windows 原生 / WSL2 / Linux / macOS 全平台实测，不做未经验证的兼容承诺 |
 
@@ -73,13 +73,13 @@ git clone https://github.com/pollen-robotics/microduck_rl
 git clone https://github.com/pollen-robotics/microduck
 ```
 
-如果希望和本轮 OpenMicroDuck 文档使用完全相同的版本：
+如果希望和当前 OpenMicroDuck 上游快照使用完全相同的版本：
 
 ```bash
 cd microduck_rl
-git checkout 5946fd9cdbc58956424420153e51975af3b30d77
+git checkout 29e887ecfbf5d37144759e5a9f8a176dfb83d547
 cd ../microduck
-git checkout 9f7eaad1008fffd90ef871a33a18aecd066b51a9
+git checkout 2c61dcc1f03440541cdc0729f7a375b2a9ea3005
 ```
 
 平时探索也可以直接使用上游最新 branch，但如果要发表结果或比较实验，一定要记下 commit。
@@ -133,9 +133,9 @@ uv run scripts/infer_policy.py \
   --new-cmd-obs
 ```
 
-如果使用其它 commit，Policy 文件可能变化，应先查看：
+在当前 RL 快照里，CPU inference 默认也走 BAM M6 XL330 actuator path；`--no-bam` 可以退回 XML PD actuator。相比纯理想位置执行器，这条路径更适合做 sim-to-real 对比。
 
-`microduck/policies/README.md`
+如果使用其它 commit，Policy 文件可能变化，应先查看当前 Runtime 仓库实际内容。
 
 ### 第 4 步：不要只看“动画有没有动”
 
@@ -159,15 +159,18 @@ microduck_rl/
 └── src/mjlab_microduck/robot/microduck/
 ```
 
-最重要的模型文件：
+当前主要模型家族是：
 
 | 文件 | 用途 |
 |---|---|
-| `robot_walk.xml` | Walking 使用的模型，减少了一些不需要的身体碰撞 |
-| `robot_allcollisions.xml` | Recovery、Trick、Ground Pick 等需要全身接触的模型 |
-| `robot_allcollisions_rollers.xml` | 带被动轮子的 Roller 模型 |
-| `scene*.xml` | Robot + 地面 + 常用 Keyframe，方便查看和 inference |
+| `robot_walk.xml` | Walking 使用的模型，减少部分身体 collision |
+| `robot_groundcontact.xml` | Recovery / Ground Task 使用的 curated body-contact model |
+| `robot_groundcontact_rollers.xml` | 带被动滚轮 mechanics 的 ground-contact 模型 |
+| `robot_allcollisions.xml` | 真正 all-part collision 的新模型；当前主要用于 inspection / experiment，而不是默认 task model |
+| `scene*.xml` | Robot + floor/environment + 常用 keyframe |
 | `add_backlash.py` / `*_backlash.xml` | 为各舵机关节插入被动齿隙关节 |
+
+`groundcontact` 是较新的名字。上游把旧的 curated `allcollisions` 角色改名，是因为它并不是真的“所有零件都有 collision”。
 
 第一次看结构，只要先认清：
 
@@ -182,17 +185,29 @@ Trunk / 躯干
 
 真实 Runtime 还有第 15 个嘴/喙电机，但它不进入 14 维 Locomotion Action。
 
+## 可选的下一步：让真实控制栈去控制 MuJoCo Body
+
+当前 `microduck_rl/develop` 还已经包含 `duck-body`，可以通过 TCP 提供 MuJoCo body，并支持自定义 scene：
+
+```bash
+uv run duck-body --scene path/to/scene.xml
+```
+
+对应的 `robotd --sim HOST:PORT` 目前位于官方公开 `pollen-robotics/microduck` 的 `sim-remote-io` 分支，**截至 2026-09-03 还没有进入 `main`**。
+
+因此它现在属于上游实验路径，不应描述成稳定发布功能。
+
+如果研究问题是“保持 Microduck 软件接口不变，但修改下面的物理模型参数”，继续看[硬件变体仿真](../simulation/hardware-variant-simulation.md)。
+
 ## 第二个实验才是“训练”
 
-Inference 正常以后，先跑官方推荐的 Smoke Test：
+Inference 正常以后，先跑一个小型 Smoke Test：
 
 ```bash
 uv run train Mjlab-Velocity-Flat-MicroDuck \
   --env.scene.num-envs 64 \
-  --agent.max_iterations 5
+  --agent.max-iterations 5
 ```
-
-官方 `AGENTS.md` 明确建议长时间训练之前先跑这个小测试。
 
 它不是为了学会走路，而是检查：
 
@@ -200,7 +215,7 @@ uv run train Mjlab-Velocity-Flat-MicroDuck \
 - Simulation 能不能正常 step；
 - 有没有 NaN；
 - Observation / Reward 是否正常；
-- Export 路径是否基本可用。
+- Training Path 是否基本可用。
 
 通过之后，再跑官方 Quickstart 的正常训练，例如：
 
@@ -237,7 +252,7 @@ uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
 
 - Actuator 参数；
 - Backlash；
-- Mass / CoM；
+- Mass / CoM / Inertia；
 - IMU 误差；
 - Encoder Bias；
 - Command Delay；
@@ -259,13 +274,9 @@ uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
 
 已经训练好的官方 ONNX 是验证 Deployment Interface 最快的办法。
 
-### 不要为了搞懂软件接口就一次把所有硬件买齐
-
-61 / 14 / 50 Hz 这套关键控制合同，大部分已经可以从公开源码搞清楚。
-
 ### 不要把 Simulation Mesh 当成量产 CAD
 
-官方模型对仿真和装配逆向极有价值，但它并不自动包含：制造公差、真实螺纹、最终线束、材料、嵌件和量产紧固件选择。
+官方模型对仿真和装配研究极有价值，但它并不自动包含：制造公差、真实螺纹、最终线束、材料、嵌件和量产紧固件选择。
 
 ## 如果第一步跑不起来，按这个顺序排查
 
@@ -282,10 +293,11 @@ uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
 
 ## 完成后继续看
 
-1. [硬件参数总表](../hardware/parameter-reference.md)
-2. [结构与装配地图](../hardware/structure-and-assembly-map.md)
-3. [Sim-to-real 参数总表](../simulation/sim-to-real-parameter-reference.md)
-4. [公开复现路线图](public-reproduction-roadmap.md)
+1. [硬件变体仿真](../simulation/hardware-variant-simulation.md)
+2. [硬件参数总表](../hardware/parameter-reference.md)
+3. [结构与装配地图](../hardware/structure-and-assembly-map.md)
+4. [Sim-to-real 参数总表](../simulation/sim-to-real-parameter-reference.md)
+5. [公开复现路线图](public-reproduction-roadmap.md)
 
 ## 主要官方来源
 
@@ -293,4 +305,5 @@ uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/README.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/AGENTS.md
 - https://github.com/pollen-robotics/microduck_rl/blob/develop/scripts/infer_policy.py
-- https://github.com/pollen-robotics/microduck/tree/main/policies
+- https://github.com/pollen-robotics/microduck
+- https://github.com/pollen-robotics/microduck/tree/sim-remote-io
