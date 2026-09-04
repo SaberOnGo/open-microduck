@@ -6,6 +6,7 @@ This directory is reserved for **OpenMicroDuck-owned public research outputs** s
 
 For maintained public-source documentation about Microduck hardware, use the English documentation tree:
 
+- [Interactive Onshape assembly baseline](../docs/en/hardware/onshape-interactive-assembly.md)
 - [Public hardware inventory and BOM status](../docs/en/hardware/public-bom.md)
 - [Community-derived BOM reconstruction](../docs/en/hardware/community-bom-reconstruction.md)
 - [Mechanical structure and kinematics](../docs/en/hardware/mechanical-structure.md)
