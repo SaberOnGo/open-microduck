@@ -6,6 +6,7 @@
 
 关于 Microduck 本体硬件的持续维护文档，请进入中文文档树：
 
+- [Onshape 交互式总装基线](../docs/zh-CN/hardware/onshape-interactive-assembly.md)
 - [公开硬件清单与 BOM 状态](../docs/zh-CN/hardware/public-bom.md)
 - [社区推导 BOM、紧固件、轴承与装配重建](../docs/zh-CN/hardware/community-bom-reconstruction.md)
 - [机械结构与运动学](../docs/zh-CN/hardware/mechanical-structure.md)
